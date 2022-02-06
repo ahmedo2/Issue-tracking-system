@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const config = require('config');
+// const config = require('config');
 
 const app = express();
 
@@ -9,7 +9,7 @@ const routes = require("./routes");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const db = config.get(MONGO_URI);
+const db = process.env.MONGO_URI
 
 // Connet to MongoDB
 mongoose.connect(db,  { useNewUrlParser: true , useUnifiedTopology: true, useCreateIndex: true })
