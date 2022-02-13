@@ -1,30 +1,19 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { P } from "../Text"
-import API from "../../utils/API";
+import { login, clearErrors } from "../../actions/authAction";
+import { P } from "../Text";
 import {
-  Flex,
-  Heading,
-  Input,
+  Container,
+  Row,
+  Col,
   Button,
-  InputGroup,
-  Stack,
-  InputLeftElement,
-  chakra,
-  Box,
-  Link,
-  Avatar,
-  FormControl,
-  FormHelperText,
-  InputRightElement,
-  Select
-} from "@chakra-ui/react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
-
-const CFaUserAlt = chakra(FaUserAlt);
-const CFaLock = chakra(FaLock);
-
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert,
+} from "reactstrap";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,113 +22,90 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [msg, setMsg] = useState(null);
+
+  const isAuthenticated = useSelector(
+    (state) => state.authReducer.isAuthenticated
+  );
+  const error = useSelector((state) => state.errorReducer);
+  const dispatch = useDispatch();
 
   const history = useNavigate();
+
+  useEffect(() => {
+    if (error.id === "LOGIN_FAIL") {
+      setMsg(error.msg.msg);
+    } else {
+      setMsg(null);
+    }
+    if (isAuthenticated) {
+      dispatch(clearErrors());
+      history.push("/dashboard");
+    }
+  }, [error, isAuthenticated, dispatch, history]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const dataObj = {
       email,
       password,
-      role
+      role,
     };
 
-    API.login(dataObj)
-      .then(data => {
-        console.log(data);
-        history.push("/dashboard");
-
-      })
-      .catch(err => console.log(err));
-  }
+    dispatch(login(dataObj));
+  };
 
   return (
-    <Flex
-      flexDirection="column"
-      width="100wh"
-      height="100vh"
-      backgroundColor="gray.200"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Stack
-        flexDir="column"
-        mb="2"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
-        <Box minW={{ base: "90%", md: "468px" }}>
-          <form>
-            <Stack
-              spacing={4}
-              p="1rem"
-              backgroundColor="whiteAlpha.900"
-              boxShadow="md"
-            >
-              <FormControl>
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<CFaUserAlt color="gray.300" />}
-                  />
-                  <Input type="email" name="email" placeholder="email address" />
-                </InputGroup>
-              </FormControl>
-              <FormControl>
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    color="gray.300"
-                    children={<CFaLock color="gray.300" />}
-                  />
-                  <Input
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                      {showPassword ? "Hide" : "Show"}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <FormHelperText textAlign="right">
-                  <Link>forgot password?</Link>
-                </FormHelperText>
-              </FormControl>
-              <FormControl>
-                <Select name="select" placeholder='Select option' onChange={(e) => setRole(e.target.value)}>
-                  <option value="resident">Resident</option>
-                  <option value="manager">Manager</option>
-                  <option value="administrator">Administrator</option>
-                </Select>
-              </FormControl>
-              <Button
-                borderRadius={0}
-                type="submit"
-                variant="solid"
-                colorScheme="teal"
-                width="full"
+    <Container>
+      <P className="lead loginHeadText text-center text-dark">Login</P>
+      <Row className="mx-auto">
+        <Col md={4} className="mx-auto">
+          {msg ? <Alert color="danger">{msg}</Alert> : null}
+          <Form className="logForm bg-white p-4 text-dark">
+            <FormGroup>
+              <Label for="exampleEmail">Email</Label>
+              <Input
+                type="email"
+                name="email"
+                id="exampleEmail"
+                placeholder="Please enter Email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="examplePassword">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                id="examplePassword"
+                placeholder="Please enter Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleSelect">Select</Label>
+              <Input
+                type="select"
+                name="select"
+                id="exampleSelect"
+                onChange={(e) => setRole(e.target.value)}
               >
-                Login
-              </Button>
-            </Stack>
-          </form>
-        </Box>
-      </Stack>
-      <Box>
-        New to us?{" "}
-        <Link color="teal.500" href="#">
-          Sign Up
-        </Link>
-      </Box>
-    </Flex>
-  )
-
-
+                <option value="Default" disabled>
+                  Please select:
+                </option>
+                <option value="resident">Resident</option>
+                <option value="manager">Manager</option>
+                <option value="administrator">Administrator</option>
+              </Input>
+            </FormGroup>
+            <Button onClick={handleFormSubmit} color="dark" size="lg" block>
+              LogIn
+            </Button>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
-
-export default Login; 
+export default Login;
