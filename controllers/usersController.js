@@ -13,6 +13,7 @@ module.exports = {
       password,
       address,
       address2,
+      city,
       state,
       zip,
       phoneNumber,
@@ -25,6 +26,7 @@ module.exports = {
       !email ||
       !password ||
       !address ||
+      !city ||
       !state ||
       !zip ||
       !phoneNumber
@@ -48,6 +50,7 @@ module.exports = {
           email,
           address,
           address2,
+          city,
           state,
           zip,
           phoneNumber,
@@ -68,6 +71,8 @@ module.exports = {
                 lastName,
                 email,
                 address,
+                address2,
+                city,
                 state,
                 zip,
                 phoneNumber,
@@ -83,7 +88,7 @@ module.exports = {
                   res.json({
                     token,
                     user: {
-                      id: user.id,
+                      _id: user.id,
                       firstName,
                       lastName,
                       email,
@@ -125,8 +130,17 @@ module.exports = {
             { expiresIn: 3600 },
             (err, token) => {
               if (err) throw err;
-              const { firstName, lastName, email, address, state, zip, phone } =
-                user;
+              const {
+                firstName,
+                lastName,
+                email,
+                address,
+                address2,
+                city,
+                state,
+                zip,
+                phoneNumber,
+              } = user;
               res.json({
                 token,
                 user: {
@@ -135,9 +149,11 @@ module.exports = {
                   lastName,
                   email,
                   address,
+                  address2,
+                  city,
                   state,
                   zip,
-                  phone,
+                  phoneNumber,
                 },
               });
             }

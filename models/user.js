@@ -5,54 +5,58 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   firstName: {
     type: String,
-    required: true
+    required: true,
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   address: {
     type: String,
-    required: true
+    required: true,
   },
   address2: {
-    type: String
+    type: String,
+  },
+  city: {
+    type: String,
+    required: true,
   },
   state: {
     type: String,
-    required: true
+    required: true,
   },
   zip: {
     type: String,
-    required: true
+    required: true,
   },
   phoneNumber: {
     type: Number,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   role: {
     type: String,
-    require: true
+    require: true,
   },
   tickets: [
     {
       type: Schema.Types.ObjectId,
-      ref: "userticket"
-    }
-  ]
+      ref: "userticket",
+    },
+  ],
 });
 
-module.exports = User = mongoose.model("user", UserSchema); 
+module.exports = User = mongoose.model("user", UserSchema);

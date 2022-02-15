@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { P } from "../Text";
+import { P } from "../Tags";
 import {
   Container,
   Row,

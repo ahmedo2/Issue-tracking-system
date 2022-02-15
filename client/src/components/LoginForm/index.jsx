@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login, clearErrors } from "../../actions/authAction";
-import { P } from "../Text";
+import { P } from "../Tags";
 import {
   Container,
   Row,

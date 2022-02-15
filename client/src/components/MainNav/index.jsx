@@ -33,7 +33,9 @@ function MainNav() {
             </Link>
           </NavItem>
           <NavItem>
-            <NavLink href="/ticketrequest">Ticket Status</NavLink>
+            <Link className="nav-link" to="/ticketlist">
+              Ticket Status
+            </Link>
           </NavItem>
           <NavItem>
             <NavLink href="#">Contact</NavLink>

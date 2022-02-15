@@ -5,21 +5,26 @@ const Schema = mongoose.Schema;
 const UserTicketSchema = new Schema({
   tixId: {
     type: String,
-    required: true
+    required: true,
   },
   subject: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+  },
+  comments: {
+    type: Array,
+  },
+  images: {
+    type: Array,
   }
-
 });
 
-module.exports = UserTicket = mongoose.model("userticket", UserTicketSchema); 
+module.exports = UserTicket = mongoose.model("userticket", UserTicketSchema);
