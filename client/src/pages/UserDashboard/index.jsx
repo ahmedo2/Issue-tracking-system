@@ -6,6 +6,7 @@ import MainNav from "../../components/MainNav";
 import ProfileImage from "../../components/ProfileImage";
 import { useSelector, useDispatch } from "react-redux";
 import { loadUserTickets } from "../../actions/ticketAction";
+import Icon from "../../components/Icon";
 
 function UserDashboard() {
   const user = useSelector((state) => state.authReducer);
@@ -58,7 +59,7 @@ function UserDashboard() {
               </Col>
               <Col md={12}>
                 {" "}
-                <P clssName="bk-white">
+                <P className="bk-white">
                   <strong>email:</strong> {email}
                 </P>
               </Col>
@@ -118,6 +119,8 @@ function UserDashboard() {
           <Col md={3} className="mt-4">
             <Link to="/ticketrequest">
               <Button outline color="secondary" size="lg" block>
+                {" "}
+                <Icon className="far fa-clipboard fa-1x mr-3 text-dark" />
                 Submit a Ticket
               </Button>
             </Link>
@@ -125,17 +128,20 @@ function UserDashboard() {
           <Col md={3} className="mt-4">
             <Link to="/ticketlist">
               <Button outline color="secondary" size="lg" block>
+                <Icon className="far fa-hourglass fa-1x mr-3 text-dark" />
                 Ticket Status
               </Button>
             </Link>
           </Col>
           <Col md={3} className="mt-4">
             <Button outline color="secondary" size="lg" block>
+              <Icon className="far fa-edit fa-1x mr-3 text-dark" />
               Update Profile
             </Button>
           </Col>
           <Col md={3} className="mt-4">
             <Button outline color="secondary" size="lg" block>
+              <Icon className="far fa-question-circle fa-1x mr-3 text-dark" />
               Contact
             </Button>
           </Col>

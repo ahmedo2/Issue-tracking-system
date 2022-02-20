@@ -24,7 +24,11 @@ const UserTicketSchema = new Schema({
   },
   images: {
     type: Array,
-  }
+  },
+  status: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = UserTicket = mongoose.model("userticket", UserTicketSchema);
