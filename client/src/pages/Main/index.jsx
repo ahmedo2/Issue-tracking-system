@@ -36,8 +36,9 @@ function Main() {
         <>
           <RegisterForm />
           <P className="textLogin text-center">
+            Already registered..? Please{" "}
             <Span className="linkSpan" onClick={handleRegisterSwitch}>
-              Back
+              Login
             </Span>
           </P>
         </>

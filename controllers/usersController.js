@@ -54,6 +54,7 @@ module.exports = {
           state,
           zip,
           phoneNumber,
+          image: "",
           role,
         });
         // Generate the Hash for the password
@@ -140,6 +141,7 @@ module.exports = {
                 state,
                 zip,
                 phoneNumber,
+                image,
               } = user;
               res.json({
                 token,
@@ -154,6 +156,7 @@ module.exports = {
                   state,
                   zip,
                   phoneNumber,
+                  image,
                 },
               });
             }
@@ -170,5 +173,71 @@ module.exports = {
       .populate("tickets")
       .then((user) => res.json(user))
       .catch((err) => console.log(res.status(404).json({ success: false })));
+  },
+
+  // Update User
+  updateUser: function (req, res) {
+    const {
+      firstName,
+      lastName,
+      address,
+      address2,
+      city,
+      state,
+      zip,
+      phoneNumber,
+    } = req.body;
+    console.log(zip);
+
+    if (
+      !firstName ||
+      !lastName ||
+      !address ||
+      !city ||
+      !state ||
+      !zip ||
+      !phoneNumber
+    ) {
+      return res.status(400).json({ msg: "Please enter all fields" });
+    }
+
+    User.findByIdAndUpdate(
+      req.params.id,
+      {
+        firstName,
+        lastName,
+        address,
+        address2,
+        city,
+        state,
+        zip,
+        phoneNumber,
+      },
+      { new: true }
+    )
+      .then((data) => res.json(data))
+      .catch((err) => console.log(err));
+  },
+
+  userImageUpload: function (req, res) {
+    // console.log("BODY", req.body.userId);
+    // console.log("FILE", req.file.filename);
+
+    if (req.file === undefined)
+      return res.status(404).json({ msg: "Please enter a file" });
+
+    User.findByIdAndUpdate(
+      req.body.userId,
+      {
+        image: req.file.filename,
+      },
+      { new: true }
+    )
+      .then((data) => {
+        console.log(data);
+
+        res.json(data);
+      })
+      .catch((err) => console.log(err));
   },
 };

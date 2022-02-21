@@ -3,12 +3,13 @@ import {
   LOAD_TICKETS,
   LOAD_USER_TICKETS,
   POST_TICKET,
-  UPDATE_TICKET,
   DELETE_TICKET,
   CLEAR_TICKETS,
   POST_SUCCESS,
   CURRENT_TICKET,
   POST_COMMENT,
+  POST_IMAGE,
+  IS_LOADING,
 } from "../actions/actions";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   userTickets: [],
   currentTicket: {},
   isPostSuccess: false,
+  isLoading: true,
 };
 
 export default function (state = initialState, action) {
@@ -45,6 +47,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         currentTicket: chosen[0],
+        isLoading: false,
       };
     case POST_COMMENT:
       return {
@@ -52,15 +55,25 @@ export default function (state = initialState, action) {
         currentTicket: action.payload,
         isPostSuccess: true,
       };
-    case UPDATE_TICKET:
-      return;
-    case DELETE_TICKET:
-      return;
+    case POST_IMAGE:
+      return {
+        ...state,
+        currentTicket: action.payload,
+        isPostSuccess: true,
+        isLoading: false,
+      };
+    case IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
     case POST_SUCCESS:
       return {
         ...state,
         isPostSuccess: false,
       };
+    case DELETE_TICKET:
+      return;
     case CLEAR_TICKETS:
       return {
         allTickets: [],

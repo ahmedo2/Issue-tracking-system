@@ -3,7 +3,6 @@ import {
   LOAD_TICKETS,
   LOAD_USER_TICKETS,
   POST_TICKET,
-  UPDATE_TICKET,
   DELETE_TICKET,
   CLEAR_TICKETS,
   POST_ERROR,
@@ -11,6 +10,9 @@ import {
   CURRENT_TICKET,
   POST_COMMENT,
   COMMENT_ERROR,
+  POST_IMAGE,
+  IMAGE_ERROR,
+  IS_LOADING,
 } from "../actions/actions";
 import { tokenConfig, returnErrors } from "./authAction";
 
@@ -33,8 +35,8 @@ export const loadUserTickets = () => (dispatch, getState) => {
 };
 
 export const addComment = (id, data) => (dispatch) => {
-  console.log("id", id);
-  console.log("data", data);
+  // console.log("id", id);
+  // console.log("data", data);
 
   axios
     .post("/api/ticket/comment/" + id, data)
@@ -49,6 +51,31 @@ export const addComment = (id, data) => (dispatch) => {
         returnErrors(err.response.data, err.response.status, COMMENT_ERROR)
       );
     });
+};
+
+export const addImage = (data, config) => (dispatch) => {
+  axios
+    .post("/api/ticket/image/upload", data, config)
+    .then((data) => {
+      console.log(data.data);
+
+      dispatch({
+        type: POST_IMAGE,
+        payload: data.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, IMAGE_ERROR)
+      );
+    });
+};
+
+export const isLoadingImage = (status) => {
+  return {
+    type: IS_LOADING,
+    payload: status,
+  };
 };
 
 export const addTicket = (data) => (dispatch) => {
@@ -79,7 +106,7 @@ export const clearTickets = () => {
 };
 
 export const currentTicket = (id) => {
-  console.log("current Action");
+  // console.log("current Action");
 
   return {
     type: CURRENT_TICKET,

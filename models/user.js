@@ -40,8 +40,11 @@ const UserSchema = new Schema({
     required: true,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
+  },
+  image: {
+    type: String,
   },
   date: {
     type: Date,

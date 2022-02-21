@@ -135,7 +135,7 @@ function Register() {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="registerAddress2">Address 2</Label>
+              <Label for="registerAddress2">Apt, Suite, Unit:</Label>
               <Input
                 type="text"
                 name="address2"
