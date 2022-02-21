@@ -8,6 +8,9 @@ import {
   CLEAR_TICKETS,
   POST_ERROR,
   POST_SUCCESS,
+  CURRENT_TICKET,
+  POST_COMMENT,
+  COMMENT_ERROR,
 } from "../actions/actions";
 import { tokenConfig, returnErrors } from "./authAction";
 
@@ -27,6 +30,25 @@ export const loadUserTickets = () => (dispatch, getState) => {
       payload: data.data.tickets,
     });
   });
+};
+
+export const addComment = (id, data) => (dispatch) => {
+  console.log("id", id);
+  console.log("data", data);
+
+  axios
+    .post("/api/ticket/comment/" + id, data)
+    .then((data) => {
+      dispatch({
+        type: POST_COMMENT,
+        payload: data.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, COMMENT_ERROR)
+      );
+    });
 };
 
 export const addTicket = (data) => (dispatch) => {
@@ -53,5 +75,14 @@ export const postSuccess = () => {
 export const clearTickets = () => {
   return {
     type: CLEAR_TICKETS,
+  };
+};
+
+export const currentTicket = (id) => {
+  console.log("current Action");
+
+  return {
+    type: CURRENT_TICKET,
+    payload: id,
   };
 };

@@ -10,6 +10,7 @@ import {
   Collapse,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import Icon from "../Icon";
 import Logout from "../Logout";
 
 function MainNav() {
@@ -19,11 +20,14 @@ function MainNav() {
   return (
     <Navbar
       color="white"
-      className="border-bottom border-dark"
+      className="border-bottom border-primary"
       light
       expand="md"
     >
-      <NavbarBrand href="/">Ticket Generator</NavbarBrand>
+      <NavbarBrand className="text-primary nav-text" href="/">
+        <Icon className="fas fa-clipboard-list text-primary fa-1x mr-3 ml-3"></Icon>
+        Ticket System
+      </NavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
@@ -33,7 +37,7 @@ function MainNav() {
             </Link>
           </NavItem>
           <NavItem>
-            <Link className="nav-link" to="/ticketlist">
+            <Link className="nav-link" to="/user/ticketlist">
               Ticket Status
             </Link>
           </NavItem>
@@ -43,7 +47,7 @@ function MainNav() {
         </Nav>
 
         <NavbarText>
-          <Link className="nav-link" to="/dashboard">
+          <Link className="nav-link" to="/user/dashboard">
             User Dashboard
           </Link>
         </NavbarText>
