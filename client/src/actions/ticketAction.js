@@ -13,6 +13,7 @@ import {
   POST_IMAGE,
   IMAGE_ERROR,
   IS_LOADING,
+  POST_SINGLE_IMAGE,
 } from "../actions/actions";
 import { tokenConfig, returnErrors } from "./authAction";
 
@@ -53,6 +54,19 @@ export const addComment = (id, data) => (dispatch) => {
     });
 };
 
+export const clearTickets = () => {
+  return {
+    type: CLEAR_TICKETS,
+  };
+};
+
+export const currentTicket = (id) => {
+  return {
+    type: CURRENT_TICKET,
+    payload: id,
+  };
+};
+
 export const addImage = (data, config) => (dispatch) => {
   axios
     .post("/api/ticket/image/upload", data, config)
@@ -61,6 +75,24 @@ export const addImage = (data, config) => (dispatch) => {
 
       dispatch({
         type: POST_IMAGE,
+        payload: data.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, IMAGE_ERROR)
+      );
+    });
+};
+
+export const addImageNewTix = (data, config) => (dispatch) => {
+  axios
+    .post("/api/tickets/newimage/upload", data, config)
+    .then((data) => {
+      console.log(data.data);
+
+      dispatch({
+        type: POST_SINGLE_IMAGE,
         payload: data.data,
       });
     })
@@ -96,20 +128,5 @@ export const addTicket = (data) => (dispatch) => {
 export const postSuccess = () => {
   return {
     type: POST_SUCCESS,
-  };
-};
-
-export const clearTickets = () => {
-  return {
-    type: CLEAR_TICKETS,
-  };
-};
-
-export const currentTicket = (id) => {
-  // console.log("current Action");
-
-  return {
-    type: CURRENT_TICKET,
-    payload: id,
   };
 };

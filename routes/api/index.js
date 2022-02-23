@@ -10,6 +10,11 @@ const upload = require("../../middleware/upload");
 
 router.get("/tickets", controller.findAll);
 router.post("/tickets", controller.save);
+router.post(
+  "/tickets/newimage/upload",
+  upload.single("file"),
+  controller.imageUploadNewTix
+);
 router.post("/ticket/comment/:id", controller.addComment);
 router.delete("/ticket/:id", controller.delete);
 

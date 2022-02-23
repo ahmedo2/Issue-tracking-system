@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Icon from "../Icon";
-import { Form, FormGroup, CustomInput, Button, Row, Col } from "reactstrap";
+import { Form, FormGroup, Input, Button, Row, Col } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfileImage } from "../../actions/authAction";
 
@@ -51,7 +51,7 @@ function ProfileImage() {
             <Row className="justify-content-center">
               <Col md={8}>
                 <FormGroup>
-                  <CustomInput
+                  <Input
                     className="profile-input"
                     type="file"
                     id="ImageBrowserProfile"
