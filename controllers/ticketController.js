@@ -24,7 +24,8 @@ module.exports = {
 
   // Save Ticket
   save: function (req, res) {
-    const { tixId, date, subject, description, status, userId } = req.body;
+    const { tixId, date, subject, description, images, status, userId } =
+      req.body;
     if (!subject || !description) {
       return res
         .status(400)
@@ -36,6 +37,7 @@ module.exports = {
       date,
       subject,
       description,
+      images,
       status,
     });
     // console.log(newTicket);
@@ -99,13 +101,13 @@ module.exports = {
         const readstream = gfs.createReadStream(file.filename);
         readstream.pipe(res);
       } else {
-        res.status(404).json({ err: "Not and image" });
+        res.status(404).json({ err: "Not an image" });
       }
     });
   },
 
   imageUploadNewTix: function (req, res) {
-    console.log(req.file);
+    // console.log(req.file);
     if (req.file === undefined)
       return res.status(404).json({ msg: "Please enter a file" });
     if (
@@ -114,7 +116,7 @@ module.exports = {
     ) {
       res.json({ file: req.file });
     } else {
-      return res.status(404).json({ err: "Not and image" });
+      return res.status(404).json({ msg: "Not an image" });
     }
   },
 
@@ -140,7 +142,39 @@ module.exports = {
         .then((data) => res.json(data))
         .catch((err) => console.log(err));
     } else {
-      return res.status(404).json({ err: "Not and image" });
+      return res.status(404).json({ msg: "Only PNG or JPG files please." });
     }
+  },
+
+  deleteProfileImage: function (req, res) {
+    gfs.remove(
+      { filename: req.params.imagename, root: "uploads" },
+      (err, gridStore) => {
+        if (err) {
+          return res.status(404).json({ err: err });
+        }
+        User.findByIdAndUpdate(
+          { _id: req.params.userid },
+          { image: "" },
+          { new: true }
+        )
+          .then((data) => res.json(data))
+          .catch((err) => console.log(err));
+      }
+    );
+  },
+
+  imageDeleteNewTix: function (req, res) {
+    gfs.remove(
+      { filename: req.params.imagename, root: "uploads" },
+      (err, gridStore) => {
+        if (err) {
+          return res.status(404).json({ err: err });
+        }
+        console.log("GRIDSTAOR", gridStore);
+
+        res.json(gridStore);
+      }
+    );
   },
 };

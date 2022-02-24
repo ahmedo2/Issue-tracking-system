@@ -12,6 +12,7 @@ import {
 import { P } from "../Tags";
 import { useDispatch } from "react-redux";
 import { addImage, isLoadingImage } from "../../actions/ticketAction";
+import { clearErrors } from "../../actions/authAction";
 import { IMAGE_ERROR } from "../../actions/actions";
 
 import Icon from "../Icon";
@@ -31,6 +32,7 @@ function ImageLoader(props) {
     if (props.error.id === IMAGE_ERROR) {
       setMsgImage(props.error.msg.msg);
       dispatch(isLoadingImage(false));
+      dispatch(clearErrors());
     }
   }, [props.error]);
 
@@ -52,13 +54,17 @@ function ImageLoader(props) {
     inputImage.childNodes[1].textContent = "Upload your Image";
   };
 
+  const removeImage = (img) => {
+    dispatch(props.removeImage(img));
+  };
+
   return (
     <React.Fragment>
       <Col md={12}>
         <Form onSubmit={handleImageForm}>
           {msgImage ? <Alert color="danger">{msgImage}</Alert> : null}
           <Row>
-            <Col md={4}>
+            <Col className="p-0" md={4}>
               <FormGroup>
                 <CustomInput
                   className="file-input"
@@ -89,20 +95,21 @@ function ImageLoader(props) {
           </Row>
         ) : (
           props.images.map((img, i) => {
-            return (
-              <div className="loading">
-                <img
-                  key={i}
-                  className="tixImages"
-                  src={"/api/ticket/image/" + img}
-                  alt="Ticket Images"
-                  width="100%"
-                />
-                <a className="img-del-btn bg-dark text-white" href="#">
-                  <Icon className="fas fa-trash-alt" />
-                </a>
-              </div>
-            );
+            <div className="loading">
+              <img
+                key={i}
+                className="tixImages"
+                src={"/api/ticket/image/" + img}
+                alt="Ticket Images"
+                width="100%"
+              />
+              <a
+                className="img-del-btn bg-dark text-white"
+                onClick={() => removeImage(img)}
+              >
+                <Icon className="fas fa-trash-alt" />
+              </a>
+            </div>;
           })
         )}
       </Col>

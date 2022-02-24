@@ -10,11 +10,6 @@ const upload = require("../../middleware/upload");
 
 router.get("/tickets", controller.findAll);
 router.post("/tickets", controller.save);
-router.post(
-  "/tickets/newimage/upload",
-  upload.single("file"),
-  controller.imageUploadNewTix
-);
 router.post("/ticket/comment/:id", controller.addComment);
 router.delete("/ticket/:id", controller.delete);
 
@@ -26,5 +21,17 @@ router.post(
   upload.single("file"),
   controller.imageUpload
 );
+router.delete(
+  "/ticket/image/:userid/:imagename",
+  controller.deleteProfileImage
+);
+
+// Routes for images when submittin a new tix
+router.post(
+  "/tickets/newimage/upload",
+  upload.single("file"),
+  controller.imageUploadNewTix
+);
+router.delete("/ticket/newimage/:imagename", controller.imageDeleteNewTix);
 
 module.exports = router;

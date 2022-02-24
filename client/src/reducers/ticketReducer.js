@@ -3,7 +3,6 @@ import {
   LOAD_TICKETS,
   LOAD_USER_TICKETS,
   POST_TICKET,
-  DELETE_TICKET,
   CLEAR_TICKETS,
   POST_SUCCESS,
   CURRENT_TICKET,
@@ -11,13 +10,15 @@ import {
   POST_IMAGE,
   IS_LOADING,
   POST_SINGLE_IMAGE,
+  CLEAR_SINGLE_IMAGE,
+  DELETE_NEW_TIX_IMAGE,
 } from "../actions/actions";
 
 const initialState = {
   allTickets: [],
   userTickets: [],
   currentTicket: {},
-  currentImage: {},
+  currentImage: [],
   isPostSuccess: false,
   isLoading: true,
 };
@@ -67,8 +68,21 @@ export default function (state = initialState, action) {
     case POST_SINGLE_IMAGE:
       return {
         ...state,
-        currentImage: action.payload,
+        currentImage: state.currentImage.concat(action.payload),
         isLoading: false,
+      };
+    case DELETE_NEW_TIX_IMAGE:
+      return {
+        ...state,
+        currentImage: state.currentImage.filter(
+          (item) => item !== action.payload
+        ),
+        isLoading: false,
+      };
+    case CLEAR_SINGLE_IMAGE:
+      return {
+        ...state,
+        currentImage: [],
       };
     case IS_LOADING:
       return {
@@ -80,8 +94,6 @@ export default function (state = initialState, action) {
         ...state,
         isPostSuccess: false,
       };
-    case DELETE_TICKET:
-      return;
     case CLEAR_TICKETS:
       return {
         allTickets: [],

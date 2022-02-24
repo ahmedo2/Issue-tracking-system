@@ -225,19 +225,25 @@ module.exports = {
 
     if (req.file === undefined)
       return res.status(404).json({ msg: "Please enter a file" });
+    if (
+      req.file.mimetype === "image/jpeg" ||
+      req.file.mimetype === "image/png"
+    ) {
+      User.findByIdAndUpdate(
+        req.body.userId,
+        {
+          image: req.file.filename,
+        },
+        { new: true }
+      )
+        .then((data) => {
+          console.log(data);
 
-    User.findByIdAndUpdate(
-      req.body.userId,
-      {
-        image: req.file.filename,
-      },
-      { new: true }
-    )
-      .then((data) => {
-        console.log(data);
-
-        res.json(data);
-      })
-      .catch((err) => console.log(err));
+          res.json(data);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      return res.status(404).json({ msg: "Only PNG or JPG files please." });
+    }
   },
 };

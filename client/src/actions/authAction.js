@@ -5,6 +5,8 @@ import {
   UPDATE_SUCCESS,
   UPDATE_PROFILE_IMAGE,
   UPDATE_PROFILE_IMAGE_ERROR,
+  PROFILE_IMAGE_LOADING,
+  DELETE_PROFILE_IMAGE,
 } from "../actions/actions";
 
 // Return errors
@@ -73,6 +75,37 @@ export const updateProfileImage = (data, config) => (dispatch, getState) => {
       dispatch({
         type: UPDATE_PROFILE_IMAGE,
         payload: data.data.image,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          UPDATE_PROFILE_IMAGE_ERROR
+        )
+      );
+    });
+};
+
+export const isLoadingProfileImage = (status) => {
+  return {
+    type: PROFILE_IMAGE_LOADING,
+    payload: status,
+  };
+};
+
+export const deleteProfileImage = (filename, userId) => (dispatch) => {
+  console.log("delete IMG Action", userId);
+  console.log("delete IMG Action");
+
+  axios
+    .delete("/api/ticket/image/" + userId + "/" + filename)
+    .then((data) => {
+      console.log(data);
+
+      dispatch({
+        type: DELETE_PROFILE_IMAGE,
       });
     })
     .catch((err) => {

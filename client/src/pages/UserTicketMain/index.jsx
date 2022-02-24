@@ -21,17 +21,17 @@ import {
   addTicket,
   addImageNewTix,
   postSuccess,
+  isLoadingImage,
+  clearCurrentImages,
+  imageDeleteNewTix,
 } from "../../actions/ticketAction";
 import { clearErrors } from "../../actions/authAction";
 import ImageLoader from "../../components/ImageLoader";
 
 function TicketMain() {
   const user = useSelector((state) => state.authReducer.user);
-  const { userTickets, currentImage } = useSelector(
+  const { userTickets, currentImage, isPostSuccess, isLoading } = useSelector(
     (state) => state.ticketReducer
-  );
-  const isPostSuccess = useSelector(
-    (state) => state.ticketReducer.isPostSuccess
   );
   const error = useSelector((state) => state.errorReducer);
   const history = useNavigate();
@@ -39,19 +39,17 @@ function TicketMain() {
   const [date] = useState(Date.now());
   const [tixId, setTixId] = useState("");
   const [subject, setSubject] = useState("");
-  const [images, setImages] = useState([]);
   const [description, setDescription] = useState("");
   const [status] = useState("Submitted");
   const [msg, setMsg] = useState(null);
 
-  let imageArr = [];
-
   useEffect(() => {
     // console.log("current", currentImage);
-    imageArr = images.concat(currentImage);
+    dispatch(isLoadingImage(false));
     generateTixId();
     if (error.id === POST_ERROR) {
       setMsg(error.msg.msg);
+      dispatch(clearErrors());
     }
 
     if (isPostSuccess) {
@@ -76,6 +74,7 @@ function TicketMain() {
     };
 
     dispatch(addTicket(dataObj));
+    dispatch(clearCurrentImages());
   };
 
   const generateTixId = () => {
@@ -111,9 +110,9 @@ function TicketMain() {
       <MainNav />
 
       <Container>
-        <Row>
-          <Col md={12}>
-            <Form className="logForm bg-white mt-4 p-4 text-dark">
+        <Row className="logForm mt-4 mb-4">
+          <Col className="p-0" md={12}>
+            <Form className="mt-4 pl-4 pr-4 pb-0 pt-4 text-dark">
               <h2 className="display-4 text-dark text-center">
                 Request Service Ticket
               </h2>
@@ -155,27 +154,33 @@ function TicketMain() {
                     />
                   </FormGroup>
                 </Col>
-                <Col md={12}>
-                  <P className="mt-1">Images:</P>
-                </Col>
-                <ImageLoader
-                  _id={""}
-                  images={imageArr}
-                  isLoading={""}
-                  error={error}
-                  addImageAction={addImageNewTix}
-                />
-
-                <Button
-                  className="mt-2"
-                  onClick={handleTicketForm}
-                  color="dark"
-                >
-                  Submit Ticket
-                </Button>
               </Row>
             </Form>
           </Col>
+          <Col className="pl-4 pr-4 pt-0" md={12}>
+            <P className="mt-1">Images:</P>
+            <ImageLoader
+              _id={""}
+              images={currentImage}
+              isLoading={isLoading}
+              error={error}
+              addImageAction={addImageNewTix}
+              removeImage={imageDeleteNewTix}
+            />
+          </Col>
+
+          <Col className="p-4" md={12}>
+            <Button
+              className="mt-1 mb-4 ml-1"
+              onClick={handleTicketForm}
+              color="dark"
+            >
+              Submit Ticket
+            </Button>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
           <Col md={12} className="text-center">
             <Icon
               className="back-btn far fa-arrow-alt-circle-left fa-2x mt-3 ml-3 text-primary"
