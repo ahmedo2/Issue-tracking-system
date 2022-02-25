@@ -28,14 +28,16 @@ import ImageLoader from "../../components/ImageLoader";
 
 function UserTicketDetail(props) {
   const user = useSelector((state) => state.authReducer.user);
-  const ticket = useSelector((state) => state.ticketReducer);
-  const isPostSuccess = useSelector(
-    (state) => state.ticketReducer.isPostSuccess
+  const { currentTicket, isPostSuccess, isLoading } = useSelector(
+    (state) => state.ticketReducer
   );
+  // const isPostSuccess = useSelector(
+  //   (state) => state.ticketReducer.isPostSuccess
+  // );
   const error = useSelector((state) => state.errorReducer);
   const { _id, tixId, date, subject, description, status, comments, images } =
-    ticket.currentTicket;
-  const { isLoading } = ticket;
+    currentTicket;
+  // const { isLoading } = ticket;
   const history = useNavigate();
   const dispatch = useDispatch();
 
@@ -49,6 +51,7 @@ function UserTicketDetail(props) {
     if (error.id === COMMENT_ERROR) {
       setMsgComment(error.msg.msg);
       dispatch(isLoadingImage(false));
+      dispatch(clearErrors());
     }
     if (isPostSuccess) {
       setMsgComment(null);
@@ -172,6 +175,7 @@ function UserTicketDetail(props) {
                   <ImageLoader
                     _id={_id}
                     images={images}
+                    currentImages={[]}
                     isLoading={isLoading}
                     error={error}
                     addImageAction={addImage}

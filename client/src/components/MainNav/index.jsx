@@ -42,7 +42,9 @@ function MainNav() {
             </Link>
           </NavItem>
           <NavItem>
-            <NavLink href="#">Contact</NavLink>
+            <Link className="nav-link" to="/user/contact">
+              Contact
+            </Link>
           </NavItem>
         </Nav>
 

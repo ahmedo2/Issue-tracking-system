@@ -93,23 +93,39 @@ function ImageLoader(props) {
               <Icon className="text-center mt-3 fas fa-spinner fa-pulse fa-3x" />
             </Col>
           </Row>
-        ) : (
+        ) : props.images.length !== 0 ? (
           props.images.map((img, i) => {
-            <div className="loading">
-              <img
-                key={i}
-                className="tixImages"
-                src={"/api/ticket/image/" + img}
-                alt="Ticket Images"
-                width="100%"
-              />
-              <a
-                className="img-del-btn bg-dark text-white"
-                onClick={() => removeImage(img)}
-              >
-                <Icon className="fas fa-trash-alt" />
-              </a>
-            </div>;
+            return (
+              <div className="loading">
+                <img
+                  key={i}
+                  className="tixImages"
+                  src={"/api/ticket/image/" + img}
+                  alt="Ticket Images"
+                  width="100%"
+                />
+              </div>
+            );
+          })
+        ) : (
+          props.currentImages.map((img, i) => {
+            return (
+              <div className="loading">
+                <img
+                  key={i}
+                  className="tixImages"
+                  src={"/api/ticket/image/" + img}
+                  alt="Ticket Images"
+                  width="100%"
+                />
+                <a
+                  className="img-del-btn bg-dark text-white"
+                  onClick={() => removeImage(img)}
+                >
+                  <Icon className="fas fa-trash-alt" />
+                </a>
+              </div>
+            );
           })
         )}
       </Col>

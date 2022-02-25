@@ -156,10 +156,12 @@ function UserDashboard() {
             </Button>
           </Col>
           <Col md={3} className="mt-4">
-            <Button outline color="secondary" size="lg" block>
-              <Icon className="far fa-question-circle fa-1x mr-3 dash-icon" />
-              Contact
-            </Button>
+            <Link className="dash-link" to="/user/contact">
+              <Button outline color="secondary" size="lg" block>
+                <Icon className="far fa-question-circle fa-1x mr-3 dash-icon" />
+                Contact
+              </Button>
+            </Link>
           </Col>
         </Row>
       </Container>

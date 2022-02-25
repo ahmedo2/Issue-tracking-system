@@ -8,6 +8,7 @@ import UserDashboard from "./pages/UserDashboard";
 import UserTicketMain from "./pages/UserTicketMain";
 import UserTicketList from "./pages/UserTicketList";
 import UserTicketDetail from "./pages/UserTicketDetail";
+import Contact from "./pages/Contact";
 import { loadUser } from "./actions/authAction";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -45,6 +46,7 @@ function App() {
               path="/user/ticketdetails"
               component={UserTicketDetail}
             />
+            <PrivateRoute exact path="/user/contact" component={Contact} />
           </Routes>
         </Router>
       </Provider>
