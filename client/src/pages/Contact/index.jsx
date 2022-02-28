@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { postMessages, postMessageSuccess } from "../../actions/messageAction";
 import {
   Container,
   Row,
@@ -8,19 +10,55 @@ import {
   FormGroup,
   Label,
   Input,
+  Alert,
 } from "reactstrap";
+import { MESSAGE_ERROR } from "../../actions/actions";
+import { clearErrors } from "../../actions/authAction";
 import { useHistory, Link } from "react-router-dom";
 import { H1, P } from "../../components/Tags";
 import MainNav from "../../components/MainNav";
-import { useSelector, useDispatch } from "react-redux";
 import Icon from "../../components/Icon";
 import "./style.css";
 
 function Contact() {
-  const user = useSelector((state) => state.authReducer);
-  const tickets = useSelector((state) => state.ticketReducer.userTickets);
+  const user = useSelector((state) => state.authReducer.user);
+  const { isPostMessageSuccess } = useSelector((state) => state.messageReducer);
+  const error = useSelector((state) => state.errorReducer);
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const [messageSubject, setMessageSubject] = useState("");
+  const [messageDescription, setMessageDescription] = useState("");
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  useEffect(() => {
+    if (error.id === MESSAGE_ERROR) {
+      setMsg(error.msg.msg);
+      dispatch(clearErrors());
+    }
+
+    if (isPostMessageSuccess) {
+      dispatch(postMessageSuccess());
+    }
+  }, [error]);
+
+  const handleForm = (e) => {
+    setSuccessMessage(true);
+    setMsg(null);
+    e.preventDefault();
+    // e.target.classList.add("spinner-grow spinner-grow-sm")
+    const messageObj = {
+      userId: user._id,
+      subject: messageSubject,
+      description: messageDescription,
+    };
+
+    dispatch(postMessages(messageObj));
+
+    setMessageSubject("");
+    setMessageDescription("");
+  };
 
   return (
     <React.Fragment>
@@ -33,7 +71,7 @@ function Contact() {
             <span className="contactTitle">Ticket System</span>
           </Col>
           {/* </Col> */}
-          <Col className="mt-4" md={6}>
+          <Col className="contactInfo" md={5}>
             <Row className="text-center pb-4">
               <Col md={12} className="mt-4">
                 <span>
@@ -72,7 +110,8 @@ function Contact() {
                           name="contactSubject"
                           id="contactSubject"
                           placeholder="Subject"
-                          // onChange={}
+                          value={messageSubject}
+                          onChange={(e) => setMessageSubject(e.target.value)}
                         />
                       </FormGroup>
                     </Col>
@@ -84,17 +123,58 @@ function Contact() {
                           name="description"
                           id="contactDescription"
                           placeholder="Please, add your questions or concerns."
-                          // onChange={}
+                          value={messageDescription}
+                          onChange={(e) =>
+                            setMessageDescription(e.target.value)
+                          }
                         />
                       </FormGroup>
                     </Col>
                   </Row>
+                  <Col className="p-0" md={12}>
+                    {msg ? (
+                      <>
+                        <Alert color="danger">{msg}</Alert>
+                        <Button
+                          onClick={handleForm}
+                          className="mt-1 mb-4"
+                          color="dark"
+                          size="lg"
+                          block
+                        >
+                          Submit Ticket
+                        </Button>
+                      </>
+                    ) : isPostMessageSuccess ? (
+                      <>
+                        <Alert color="success">Message Submitted..!</Alert>
+                        <Button
+                          onClick={handleForm}
+                          className="mt-1 mb-4"
+                          color="dark"
+                          size="lg"
+                          block
+                        >
+                          Submit Ticket
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        onClick={handleForm}
+                        className="mt-1 mb-4"
+                        color="dark"
+                        size="lg"
+                        block
+                      >
+                        {successMessage ? (
+                          <Icon className="fas fa-spinner fa-pulse" />
+                        ) : (
+                          "Submit Message"
+                        )}
+                      </Button>
+                    )}
+                  </Col>
                 </Form>
-                <Col className="p-4" md={12}>
-                  <Button className="mt-1 mb-4 ml-1" color="dark">
-                    Submit Ticket
-                  </Button>
-                </Col>
               </Col>
             </Row>
           </Col>

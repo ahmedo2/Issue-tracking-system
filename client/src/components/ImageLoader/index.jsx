@@ -81,7 +81,7 @@ function ImageLoader(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={2}>
+            <Col className="text-center mb-2" md={2}>
               <Button type="submit" color="dark">
                 Submit Image
               </Button>

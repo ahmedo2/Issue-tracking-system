@@ -244,10 +244,10 @@ function Register() {
                     <option value="Default" disabled>
                       State
                     </option>
-                    {stateArr.map((state) => (
-                      <>
-                        <option value={state}>{state}</option>
-                      </>
+                    {stateArr.map((state, i) => (
+                      <option key={i} value={state}>
+                        {state}
+                      </option>
                     ))}
                   </Input>
                 </FormGroup>

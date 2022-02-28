@@ -2,6 +2,7 @@ const router = require("express").Router();
 
 // import controllers
 const controller = require("../../controllers/ticketController");
+const messageController = require("../../controllers/messageController");
 
 // import upload middleware
 const upload = require("../../middleware/upload");
@@ -33,5 +34,8 @@ router.post(
   controller.imageUploadNewTix
 );
 router.delete("/ticket/newimage/:imagename", controller.imageDeleteNewTix);
+
+// Routes for UserMessages
+router.post("/usermessage", messageController.postMessages);
 
 module.exports = router;

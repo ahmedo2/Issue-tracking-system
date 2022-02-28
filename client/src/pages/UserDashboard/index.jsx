@@ -72,13 +72,13 @@ function UserDashboard() {
                     <strong>email:</strong> {email}
                   </P>
                 </Col>
-                <Col md={6} className="pr-2">
+                <Col md={6}>
                   {" "}
                   <P>
                     <strong>First Name:</strong> {firstName}
                   </P>
                 </Col>
-                <Col md={6} className="pl-0">
+                <Col md={6}>
                   {" "}
                   <P>
                     <strong>Last Name:</strong> {lastName}
@@ -96,19 +96,19 @@ function UserDashboard() {
                     <strong>Apt, Suite, Unit:</strong> {address2}
                   </P>
                 </Col>
-                <Col md={4} className="pr-2">
+                <Col md={4}>
                   {" "}
                   <P>
                     <strong>City:</strong> {city}
                   </P>
                 </Col>
-                <Col md={4} className="pr-2 pl-0">
+                <Col md={4}>
                   {" "}
                   <P>
                     <strong>State:</strong> {state}
                   </P>
                 </Col>
-                <Col md={4} className="pl-0">
+                <Col md={4}>
                   {" "}
                   <P>
                     <strong>Zip:</strong> {zip}
