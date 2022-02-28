@@ -11,6 +11,7 @@ module.exports = {
       lastName,
       email,
       password,
+      confirmPassword,
       address,
       address2,
       city,
@@ -19,6 +20,9 @@ module.exports = {
       phoneNumber,
       role,
     } = req.body;
+
+    const formattedPhone = phoneNumber.replace(/[^\d]/g, "");
+    const formattedZip = parseInt(zip.replace("-", ""));
 
     if (
       !firstName ||
@@ -35,8 +39,24 @@ module.exports = {
     }
 
     var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    if (reg.test(email) == false) {
+    if (reg.test(email) === false) {
       return res.status(400).json({ msg: "Invalid Email Format" });
+    }
+
+    if (isNaN(formattedZip)) {
+      return res.status(400).json({ msg: "Incorrect Zip Code" });
+    }
+    if (formattedPhone.length !== 10) {
+      return res.status(400).json({ msg: "Incorrect Phone Number" });
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ msg: "Password must be at least 6 characters" });
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ msg: "Passwords don't match" });
     }
 
     User.findOne({ email })

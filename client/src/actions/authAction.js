@@ -168,6 +168,7 @@ export const register =
     zip,
     phoneNumber,
     password,
+    confirmPassword,
     role,
   }) =>
   (dispatch) => {
@@ -189,6 +190,7 @@ export const register =
       zip,
       phoneNumber,
       password,
+      confirmPassword,
       role,
     });
 

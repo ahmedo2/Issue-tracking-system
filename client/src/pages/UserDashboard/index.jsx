@@ -47,7 +47,7 @@ function UserDashboard() {
     <React.Fragment>
       <MainNav />
       <Container>
-        <Row className="mt-4 mb-4">
+        <Row>
           <Col md={6} className="text-center">
             <H1 className="display-4 mb-4 mt-3 text-center text-dark">
               Hello {firstName}!

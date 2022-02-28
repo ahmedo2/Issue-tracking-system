@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState, useEffect, useRef } from "react";
 import "./style.css";
 import {
   Row,
@@ -52,9 +53,11 @@ function ImageLoader(props) {
     setMsgImage(null);
     const inputImage = document.querySelector(".file-input");
     inputImage.childNodes[1].textContent = "Upload your Image";
+    setImage("");
   };
 
   const removeImage = (img) => {
+    dispatch(isLoadingImage(true));
     dispatch(props.removeImage(img));
   };
 
@@ -65,7 +68,7 @@ function ImageLoader(props) {
           {msgImage ? <Alert color="danger">{msgImage}</Alert> : null}
           <Row>
             <Col className="p-0" md={4}>
-              <FormGroup>
+              <FormGroup className="mb-2">
                 <CustomInput
                   className="file-input"
                   type="file"
@@ -96,9 +99,8 @@ function ImageLoader(props) {
         ) : props.images.length !== 0 ? (
           props.images.map((img, i) => {
             return (
-              <div className="loading">
+              <div key={i} className="loading">
                 <img
-                  key={i}
                   className="tixImages"
                   src={"/api/ticket/image/" + img}
                   alt="Ticket Images"
@@ -110,9 +112,8 @@ function ImageLoader(props) {
         ) : (
           props.currentImages.map((img, i) => {
             return (
-              <div className="loading">
+              <div key={i} className="loading">
                 <img
-                  key={i}
                   className="tixImages"
                   src={"/api/ticket/image/" + img}
                   alt="Ticket Images"
