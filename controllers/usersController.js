@@ -102,7 +102,7 @@ module.exports = {
 
               jwt.sign(
                 { id: user.id },
-                config.get("jwtSecret"),
+                config.jwtSecret,
                 { expiresIn: 3600 },
                 (err, token) => {
                   if (err) throw err;
@@ -147,7 +147,7 @@ module.exports = {
             return res.status(400).json({ msg: "Password invalid" });
           jwt.sign(
             { id: user.id },
-            config.get("jwtSecret"),
+            config.jwtSecret,
             { expiresIn: 3600 },
             (err, token) => {
               if (err) throw err;
