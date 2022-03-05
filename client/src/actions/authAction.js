@@ -7,6 +7,17 @@ import {
   UPDATE_PROFILE_IMAGE_ERROR,
   PROFILE_IMAGE_LOADING,
   DELETE_PROFILE_IMAGE,
+  GET_ERRORS,
+  CLEAR_ERRORS,
+  USER_LOADING,
+  USER_LOADED,
+  ALL_USERS_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  LOGOUT_SUCCESS,
 } from "../actions/actions";
 
 // Return errors
@@ -41,6 +52,23 @@ export const loadUser = () => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
         type: "AUTH_ERROR",
+      });
+    });
+};
+
+export const loadAllUsers = () => (dispatch, getState) => {
+  axios
+    .get("/api/users", tokenConfig(getState))
+    .then((data) =>
+      dispatch({
+        type: ALL_USERS_LOADED,
+        payload: data.data,
+      })
+    )
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: AUTH_ERROR,
       });
     });
 };

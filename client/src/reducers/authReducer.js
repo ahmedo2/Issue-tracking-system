@@ -5,6 +5,15 @@ import {
   UPDATE_PROFILE_IMAGE,
   PROFILE_IMAGE_LOADING,
   DELETE_PROFILE_IMAGE,
+  USER_LOADING,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  LOGOUT_SUCCESS,
+  ALL_USERS_LOADED,
 } from "../actions/actions";
 const initialState = {
   token: localStorage.getItem("token"),
@@ -13,6 +22,7 @@ const initialState = {
   isUpdateSuccess: false,
   isImageLoading: true,
   user: null,
+  allUsers: null,
 };
 
 export default function (state = initialState, action) {
@@ -29,6 +39,11 @@ export default function (state = initialState, action) {
         isLoading: false,
         user: action.payload,
       };
+    case ALL_USERS_LOADED:
+      return {
+        ...state,
+        allUsers: action.payload,
+      };
     case "LOGIN_SUCCESS":
     case "REGISTER_SUCCESS":
       localStorage.setItem("token", action.payload.token);
@@ -36,6 +51,18 @@ export default function (state = initialState, action) {
         ...state,
         ...action.payload,
         isAuthenticated: true,
+        isLoading: false,
+      };
+    case AUTH_ERROR:
+    case LOGIN_FAIL:
+    case LOGOUT_SUCCESS:
+    case REGISTER_FAIL:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        token: null,
+        user: null,
+        isAuthenticated: false,
         isLoading: false,
       };
     case UPDATE_PROFILE:

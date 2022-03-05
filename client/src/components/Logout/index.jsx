@@ -16,7 +16,7 @@ function Logout() {
 
   return (
     <React.Fragment>
-      <NavLink onClick={handleClick} href="#">
+      <NavLink onClick={handleClick} to="#">
         Logout
       </NavLink>
     </React.Fragment>

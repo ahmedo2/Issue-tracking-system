@@ -1,18 +1,18 @@
 import React from "react";
-import { Route, Navigate } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-function AdminRoute({ component: Component, ...rest }) {
+function UserRoute({ component: Component, ...rest }) {
   const { isAuthenticated, user } = useSelector((state) => state.authReducer);
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        isAuthenticated && user.role === "admin" ? (
+        isAuthenticated && user.role === "resident" ? (
           <Component {...props} />
         ) : (
-          <Navigate
+          <Redirect
             to={{
               pathname: "/",
               state: { from: props.location },
@@ -24,4 +24,4 @@ function AdminRoute({ component: Component, ...rest }) {
   );
 }
 
-export default AdminRoute;
+export default UserRoute;

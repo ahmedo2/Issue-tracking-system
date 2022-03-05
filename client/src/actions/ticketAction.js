@@ -23,7 +23,7 @@ export const loadAllTickets = () => (dispatch) => {
   axios.get("/api/tickets").then((data) => {
     dispatch({
       type: LOAD_TICKETS,
-      payload: data,
+      payload: data.data,
     });
   });
 };

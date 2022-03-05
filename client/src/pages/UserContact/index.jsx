@@ -20,7 +20,7 @@ import MainNav from "../../components/MainNav";
 import Icon from "../../components/Icon";
 import "./style.css";
 
-function Contact() {
+function UserContact() {
   const user = useSelector((state) => state.authReducer.user);
   const { isPostMessageSuccess } = useSelector((state) => state.messageReducer);
   const error = useSelector((state) => state.errorReducer);
@@ -193,4 +193,4 @@ function Contact() {
   );
 }
 
-export default Contact;
+export default UserContact;

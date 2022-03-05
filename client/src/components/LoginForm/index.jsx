@@ -24,9 +24,7 @@ function Login() {
   const [role, setRole] = useState("");
   const [msg, setMsg] = useState(null);
 
-  const isAuthenticated = useSelector(
-    (state) => state.authReducer.isAuthenticated
-  );
+  const { isAuthenticated, user } = useSelector((state) => state.authReducer);
   const error = useSelector((state) => state.errorReducer);
   const dispatch = useDispatch();
 
@@ -38,9 +36,13 @@ function Login() {
     } else {
       setMsg(null);
     }
-    if (isAuthenticated) {
+    if (isAuthenticated && user.role === "resident") {
       dispatch(clearErrors());
       history.push("/user/dashboard");
+    }
+    if (isAuthenticated && user.role === "admin") {
+      dispatch(clearErrors());
+      history.push("/admin/dashboard");
     }
   }, [error, isAuthenticated, dispatch, history]);
 
@@ -95,7 +97,7 @@ function Login() {
                 </option>
                 <option value="resident">Resident</option>
                 <option value="manager">Manager</option>
-                <option value="administrator">Administrator</option>
+                <option value="admin">Administrator</option>
               </Input>
             </FormGroup>
             <Button onClick={handleFormSubmit} color="dark" size="lg" block>
