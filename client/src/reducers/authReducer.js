@@ -122,8 +122,11 @@ export default function (state = initialState, action) {
         ...state,
         token: null,
         user: null,
+        allUsers: null,
         isAuthenticated: false,
         isLoading: false,
+        isUpdateSuccess: false,
+        isImageLoading: true,
       };
     default:
       return state;

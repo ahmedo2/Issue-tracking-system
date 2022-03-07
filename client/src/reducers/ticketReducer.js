@@ -3,10 +3,12 @@ import {
   LOAD_TICKETS,
   LOAD_USER_TICKETS,
   POST_TICKET,
+  UPDATE_TICKET,
   CLEAR_TICKETS,
   POST_SUCCESS,
   CURRENT_TICKET,
   POST_COMMENT,
+  IS_NEW_COMMENT,
   POST_IMAGE,
   IS_LOADING,
   POST_SINGLE_IMAGE,
@@ -42,9 +44,10 @@ export default function (state = initialState, action) {
       };
     case CURRENT_TICKET:
       state.currentTicket = {};
-      const chosen = state.userTickets.filter(
-        (ticket) => ticket._id === action.payload
-      );
+      const chosen =
+        state.userTickets.length === 0
+          ? state.allTickets.filter((ticket) => ticket._id === action.payload)
+          : state.userTickets.filter((ticket) => ticket._id === action.payload);
       console.log(chosen);
 
       return {
@@ -52,11 +55,23 @@ export default function (state = initialState, action) {
         currentTicket: chosen[0],
         isLoading: false,
       };
+    case UPDATE_TICKET:
+      return {
+        ...state,
+        currentTicket: action.payload,
+      };
     case POST_COMMENT:
       return {
         ...state,
         currentTicket: action.payload,
         isPostSuccess: true,
+      };
+    case IS_NEW_COMMENT:
+      console.log("REDUCER", action.payload);
+
+      return {
+        ...state,
+        currentTicket: action.payload,
       };
     case POST_IMAGE:
       return {

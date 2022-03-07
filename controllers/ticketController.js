@@ -54,6 +54,15 @@ module.exports = {
       .catch((err) => console.log(err));
   },
 
+  // Update Ticket Status
+  updateStatus: function (req, res) {
+    const { status } = req.body;
+
+    UserTicket.findByIdAndUpdate(req.params.id, { status }, { new: true })
+      .then((data) => res.json(data))
+      .catch((err) => console.log(err));
+  },
+
   // Add a Comment
   addComment: function (req, res) {
     const { text } = req.body;
@@ -66,6 +75,16 @@ module.exports = {
       { $push: { comments: req.body } },
       { new: true }
     )
+      .then((data) => res.json(data))
+      .catch((err) => console.log(err));
+  },
+
+  newComment: function (req, res) {
+    console.log(req.body);
+
+    // const { newAdminComment, newUserComment } = req.body;
+
+    UserTicket.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then((data) => res.json(data))
       .catch((err) => console.log(err));
   },

@@ -162,6 +162,7 @@ module.exports = {
                 zip,
                 phoneNumber,
                 image,
+                role,
               } = user;
               res.json({
                 token,
@@ -177,12 +178,22 @@ module.exports = {
                   zip,
                   phoneNumber,
                   image,
+                  role,
                 },
               });
             }
           );
         });
       })
+      .catch((err) => console.log(err));
+  },
+
+  // Get All Users
+  getAllUsers: function (req, res) {
+    User.find()
+      .select("-password")
+      .populate("tickets")
+      .then((user) => res.json(user))
       .catch((err) => console.log(err));
   },
 

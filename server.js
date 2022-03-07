@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const config = require("config");
+const path = require("path");
 // const methodOverride = require("method-override");
 const app = express();
 
@@ -28,7 +29,7 @@ mongoose
   .then(() => console.log(`MongoDB Connected`))
   .catch((err) => console.log(err));
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3001;
 
 app.use(routes);
 

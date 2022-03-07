@@ -11,7 +11,7 @@ import {
 } from "../../actions/ticketAction";
 import { Link, useHistory } from "react-router-dom";
 import Icon from "../../components/Icon";
-import "./style.css";
+// import "./style.css";
 
 function UserTicketList() {
   const tickets = useSelector((state) => state.ticketReducer.allTickets);
@@ -31,11 +31,11 @@ function UserTicketList() {
       return `fas fa-spinner fa-1x ml-2 text-warning`;
     } else if (tickets[index].status === "Completed") {
       return `fas fa-check fa-1x ml-2 text-success`;
+    } else if (tickets[index].status === "Received") {
+      return `far fa-envelope-open fa-1x ml-2 text-success`;
     } else {
       return ``;
     }
-    // `<i class="far fa-envelope-open"></i>
-    // <i class="far fa-envelope"></i>`
   };
 
   const status = (index) => {
@@ -99,7 +99,15 @@ function UserTicketList() {
                         <Moment format="MMMM Do, YYYY">{ticket.date}</Moment>
                       </td>
                       <td>
-                        <Icon className={status(i)} />
+                        <Icon title="Status" className={status(i)} />
+                        {ticket.newUserComment ? (
+                          <Icon
+                            title="New Comment"
+                            className="fas fa-folder-plus fa-1x ml-3 text-danger"
+                          />
+                        ) : (
+                          ""
+                        )}
                       </td>
                     </tr>
                   ))}

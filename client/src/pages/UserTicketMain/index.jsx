@@ -93,13 +93,7 @@ function TicketMain() {
       "" +
       dateObj.getDate();
     const fullIdGen =
-      dateFormat +
-      "-" +
-      user.firstName.charAt(0) +
-      "" +
-      user.lastName.charAt(0) +
-      "-" +
-      (lastIdNum + 1);
+      dateFormat + "-" + user.email.split("@")[0] + "-" + (lastIdNum + 1);
     setTixId(fullIdGen);
   };
 
