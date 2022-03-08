@@ -12,8 +12,8 @@ const upload = require("../../middleware/upload");
 router.get("/tickets", controller.findAll);
 router.post("/tickets", controller.save);
 router.put("/ticket/update/:id", controller.updateStatus);
-router.post("/ticket/comment/:id", controller.addComment);
-router.post("/ticket/comment/new/:id", controller.newComment);
+router.put("/ticket/comment/:id", controller.addComment);
+router.put("/ticket/comment/new/:id", controller.newComment);
 router.delete("/ticket/:id", controller.delete);
 
 router.get("/ticket/files", controller.findFiles);
@@ -38,6 +38,8 @@ router.post(
 router.delete("/ticket/newimage/:imagename", controller.imageDeleteNewTix);
 
 // Routes for UserMessages
+router.get("/usermessage", messageController.getMessages);
 router.post("/usermessage", messageController.postMessages);
+router.put("/usermessage/:id", messageController.updateMessageStatus);
 
 module.exports = router;

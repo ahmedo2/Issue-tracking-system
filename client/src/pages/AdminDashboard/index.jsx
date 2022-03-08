@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadAllUsers } from "../../actions/authAction";
 import { loadAllTickets, clearCurrentImages } from "../../actions/ticketAction";
 import Icon from "../../components/Icon";
-import "./style.css";
+// import "./style.css";
 
 function AdminDashboard() {
   const { user } = useSelector((state) => state.authReducer);
@@ -128,7 +128,7 @@ function AdminDashboard() {
         </Row>
 
         <Row className="mt-4 mb-4 pb-4">
-          <Col md={4} className="mt-4">
+          <Col md={3} className="mt-4">
             <Link className="dash-link" to="/admin/ticketrequest">
               <Button outline color="secondary" size="lg" block>
                 {" "}
@@ -137,7 +137,7 @@ function AdminDashboard() {
               </Button>
             </Link>
           </Col>
-          <Col md={4} className="mt-4">
+          <Col md={3} className="mt-4">
             <Link className="dash-link" to="/admin/ticketlist">
               <Button outline color="secondary" size="lg" block>
                 <Icon className="far fa-hourglass fa-1x mr-3 dash-icon" />
@@ -145,7 +145,7 @@ function AdminDashboard() {
               </Button>
             </Link>
           </Col>
-          <Col md={4} className="mt-4">
+          <Col md={3} className="mt-4">
             <Button
               onClick={showUpdateForm}
               outline
@@ -157,7 +157,14 @@ function AdminDashboard() {
               Update Profile
             </Button>
           </Col>
-          {/* <Col md={3} className="mt-4"><Link className="dash-link" to="/user/contact"><Button outline color="secondary" size="lg" block><Icon className="far fa-question-circle fa-1x mr-3 dash-icon" />Contact</Button></Link></Col> */}
+          <Col md={3} className="mt-4">
+            <Link className="dash-link" to="/admin/messages">
+              <Button outline color="secondary" size="lg" block>
+                <Icon className="far fa-question-circle fa-1x mr-3 dash-icon" />
+                Messages
+              </Button>
+            </Link>
+          </Col>
         </Row>
       </Container>
     </React.Fragment>

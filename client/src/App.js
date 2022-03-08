@@ -14,6 +14,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminTicketMain from "./pages/AdminTicketMain";
 import AdminTicketList from "./pages/AdminTicketList";
 import AdminTicketDetail from "./pages/AdminTicketDetail";
+import AdminMessagesList from "./pages/AdminMessagesList";
+import AdminMessagesDetail from "./pages/AdminMessagesDetail";
 import { loadUser } from "./actions/authAction";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -68,7 +70,17 @@ function App() {
               path="/admin/ticketdetails"
               component={AdminTicketDetail}
             />
-            <UserRoute exact path="/user/contact" component={UserContact} /> */}
+            <AdminRoute
+              exact
+              path="/admin/messages"
+              component={AdminMessagesList}
+            />
+            <AdminRoute
+              exact
+              path="/admin/messages/:id"
+              component={AdminMessagesDetail}
+            />
+            {/* <UserRoute exact path="/user/contact" component={UserContact} /> */}
           </Routes>
         </Router>
       </Provider>

@@ -44,7 +44,7 @@ export const addComment = (id, data) => (dispatch) => {
   // console.log("data", data);
 
   axios
-    .post("/api/ticket/comment/" + id, data)
+    .put("/api/ticket/comment/" + id, data)
     .then((data) => {
       dispatch({
         type: POST_COMMENT,
@@ -70,9 +70,9 @@ export const isNewComment =
     }
 
     axios
-      .post("/api/ticket/comment/new/" + id, dataObj)
+      .put("/api/ticket/comment/new/" + id, dataObj)
       .then((data) => {
-        console.log("ACTION AFTER", data.data);
+        // console.log("ACTION AFTER", data.data);
         dispatch({
           type: IS_NEW_COMMENT,
           payload: data.data,

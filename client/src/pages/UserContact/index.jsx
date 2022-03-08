@@ -52,6 +52,7 @@ function UserContact() {
       userId: user._id,
       subject: messageSubject,
       description: messageDescription,
+      isMessageNew: true,
     };
 
     dispatch(postMessages(messageObj));

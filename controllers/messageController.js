@@ -2,7 +2,8 @@ const UserMessage = require("../models/UserMessage");
 
 module.exports = {
   getMessages(req, res) {
-    UserMessages.findAll()
+    UserMessage.find()
+      .populate("userId")
       .then((data) => {
         res.json(data);
       })
@@ -10,7 +11,7 @@ module.exports = {
   },
 
   postMessages(req, res) {
-    const { subject, description, userId } = req.body;
+    const { subject, description, userId, isMessageNew } = req.body;
 
     if (!subject || !description) {
       return res.status(400).json({ msg: "Please enter all fields" });
@@ -20,12 +21,31 @@ module.exports = {
       userId,
       subject,
       description,
+      isMessageNew,
     });
     console.log(messageObj);
 
     messageObj
       .save()
       .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => console.log(err));
+  },
+
+  updateMessageStatus: function (req, res) {
+    const { isMessageNew } = req.body;
+    console.log(isMessageNew);
+    console.log(req.params.id);
+
+    UserMessage.findByIdAndUpdate(
+      req.params.id,
+      { isMessageNew },
+      { new: true }
+    )
+      .then((data) => {
+        console.log(data);
+
         res.json(data);
       })
       .catch((err) => console.log(err));
