@@ -17,7 +17,7 @@ function Main() {
         <Container fluid>
           <div className="mb-0">
             <H1 className="display-5 mb-4 mt-3 text-center text-light">
-              Welcome to Ticket Generator
+              Welcome to Ticket System
             </H1>
           </div>
         </Container>

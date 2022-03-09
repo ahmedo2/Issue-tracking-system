@@ -1,9 +1,9 @@
+const UserTicket = require("../models/userTicket");
+const User = require("../models/user");
 const mongoose = require("mongoose");
-const UserTicket = require("../models/UserTicket");
-// const User = require("../models/User");
 const Grid = require("gridfs-stream");
-
 let gfs;
+
 let db = mongoose.connection;
 db.options = {};
 db.on("error", console.error.bind(console, "connection error:"));
@@ -14,79 +14,97 @@ db.once("open", function () {
 });
 
 module.exports = {
-  // Find All Tickets
-  findAll: function (req, res) {
-    UserTicket.find()
-      .populate("uploads.files")
-      .then((tickets) => res.json(tickets))
-      .catch((err) => console.log(err));
-  },
-
-  // Save Ticket
-  save: function (req, res) {
-    const { tixId, date, subject, description, images, status, userId } =
-      req.body;
-    if (!subject || !description) {
-      return res
-        .status(400)
-        .json({ msg: "Please enter Subject and Description fields" });
+  findAll: async function (req, res) {
+    try {
+      const tickets = await UserTicket.find().populate("uploads.files");
+      res.json(tickets);
+    } catch (err) {
+      throw err;
     }
-
-    const newTicket = new UserTicket({
-      tixId,
-      date,
-      subject,
-      description,
-      images,
-      status,
-    });
-    // console.log(newTicket);
-    newTicket
-      .save()
-      .then(({ _id }) =>
-        User.findByIdAndUpdate(
-          { _id: userId },
-          { $push: { tickets: _id } },
-          { new: true }
-        )
-      )
-      .then((data) => res.json(data))
-      .catch((err) => console.log(err));
   },
 
-  // Update Ticket Status
-  updateStatus: function (req, res) {
-    const { status } = req.body;
+  save: async function (req, res) {
+    try {
+      const { tixId, date, subject, description, images, status, userId } =
+        req.body;
+      if (!userId)
+        return res.status(400).json({ msg: "Please select the user" });
+      if (!subject || !description) {
+        return res
+          .status(400)
+          .json({ msg: "Please enter Subject and Description fields" });
+      }
 
-    UserTicket.findByIdAndUpdate(req.params.id, { status }, { new: true })
-      .then((data) => res.json(data))
-      .catch((err) => console.log(err));
-  },
+      const newTicket = new UserTicket({
+        tixId,
+        date,
+        subject,
+        description,
+        images,
+        status,
+      });
 
-  // Add a Comment
-  addComment: function (req, res) {
-    const { text } = req.body;
-    if (!text) {
-      return res.status(400).json({ msg: "Please enter all fields" });
+      const { _id } = await newTicket.save();
+      const data = await User.findByIdAndUpdate(
+        { _id: userId },
+        { $push: { tickets: _id } },
+        { new: true }
+      );
+      res.json(data);
+    } catch (err) {
+      throw err;
     }
-
-    UserTicket.findByIdAndUpdate(
-      req.params.id,
-      { $push: { comments: req.body } },
-      { new: true }
-    )
-      .then((data) => res.json(data))
-      .catch((err) => console.log(err));
   },
 
-  newComment: function (req, res) {
-    console.log(req.body);
+  updateStatus: async function (req, res) {
+    try {
+      const { status } = req.body;
+      const data = await UserTicket.findByIdAndUpdate(
+        req.params.id,
+        { status },
+        { new: true }
+      );
+      res.json(data);
+    } catch (err) {
+      throw err;
+    }
+  },
 
-    // const { newAdminComment, newUserComment } = req.body;
+  addComment: async function (req, res) {
+    try {
+      const { text } = req.body;
+      if (!text) {
+        return res.status(400).json({ msg: "Please enter all fields" });
+      }
+      const data = await UserTicket.findByIdAndUpdate(
+        req.params.id,
+        { $push: { comments: req.body } },
+        { new: true }
+      );
+      res.json(data);
+    } catch (err) {
+      throw err;
+    }
+  },
 
-    UserTicket.findByIdAndUpdate(req.params.id, req.body, { new: true })
-      .then((data) => res.json(data))
-      .catch((err) => console.log(err));
+  newComment: async function (req, res) {
+    try {
+      const data = await UserTicket.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+      });
+      res.json(data);
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  delete: async function (req, res) {
+    try {
+      await UserTicket.findByIdAndDelete(req.params.id);
+      res.json({ success: true });
+    } catch (err) {
+      throw err;
+    }
   },
 
   findOneFile: function (req, res) {
@@ -120,13 +138,12 @@ module.exports = {
         const readstream = gfs.createReadStream(file.filename);
         readstream.pipe(res);
       } else {
-        res.status(404).json({ err: "Not an image" });
+        res.status(404).json({ err: "Not and image" });
       }
     });
   },
 
   imageUploadNewTix: function (req, res) {
-    // console.log(req.file);
     if (req.file === undefined)
       return res.status(404).json({ msg: "Please enter a file" });
     if (
@@ -135,31 +152,27 @@ module.exports = {
     ) {
       res.json({ file: req.file });
     } else {
-      return res.status(404).json({ msg: "Not an image" });
+      return res.status(404).json({ msg: "Not and image" });
     }
   },
 
-  // Delete Ticket
-  delete: function (req, res) {
-    UserTicket.findByIdAndDelete(req.params.id)
-      .then((items) => res.json({ success: true }))
-      .catch((err) => console.log(res.status(404).json({ success: false })));
-  },
-
-  imageUpload: function (req, res) {
+  imageUpload: async function (req, res) {
     if (req.file === undefined)
       return res.status(404).json({ msg: "Please enter a file" });
     if (
       req.file.mimetype === "image/jpeg" ||
       req.file.mimetype === "image/png"
     ) {
-      UserTicket.findByIdAndUpdate(
-        req.body.tixId,
-        { $push: { images: req.file.filename } },
-        { new: true }
-      )
-        .then((data) => res.json(data))
-        .catch((err) => console.log(err));
+      try {
+        const data = await UserTicket.findByIdAndUpdate(
+          req.body.tixId,
+          { $push: { images: req.file.filename } },
+          { new: true }
+        );
+        res.json(data);
+      } catch (err) {
+        throw err;
+      }
     } else {
       return res.status(404).json({ msg: "Only PNG or JPG files please." });
     }
@@ -190,8 +203,6 @@ module.exports = {
         if (err) {
           return res.status(404).json({ err: err });
         }
-        console.log("GRIDSTAOR", gridStore);
-
         res.json(gridStore);
       }
     );
