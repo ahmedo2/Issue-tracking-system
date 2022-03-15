@@ -31,7 +31,7 @@ function AdminDashboard() {
     dispatch(loadAllTickets());
     dispatch(loadAllUsers());
     dispatch(clearCurrentImages());
-  }, []);
+  }, [dispatch]);
 
   const formatPhone = (phoneNumberString) => {
     const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
@@ -51,7 +51,7 @@ function AdminDashboard() {
       <MainNav />
       <Container>
         <Row>
-          <Col md={6} className="text-center">
+          <Col lg={6} className="text-center">
             <H1 className="display-4 mb-4 mt-3 text-center text-dark">
               Hello {firstName}!
             </H1>
@@ -60,63 +60,63 @@ function AdminDashboard() {
           {isUpdateForm ? (
             <UpdateUserForm hideUpdateForm={showUpdateForm} />
           ) : (
-            <Col md={6} className="mt-4 profileInfo">
+            <Col lg={6} className="mt-4 profileInfo">
               <Row>
-                <Col md={12}>
+                <Col lg={12}>
                   {" "}
                   <H1 className="display-5 mb-4 mt-1 text-center text-dark">
                     Admin Info
                   </H1>
                 </Col>
-                <Col md={12}>
+                <Col lg={12} md={6}>
                   {" "}
                   <P className="bk-white">
                     <strong>email:</strong> {email}
                   </P>
                 </Col>
-                <Col md={6}>
+                <Col lg={6} md={6}>
                   {" "}
                   <P>
                     <strong>First Name:</strong> {firstName}
                   </P>
                 </Col>
-                <Col md={6}>
+                <Col lg={6} md={6}>
                   {" "}
                   <P>
                     <strong>Last Name:</strong> {lastName}
                   </P>
                 </Col>
-                <Col md={12}>
+                <Col lg={12} md={6}>
                   {" "}
                   <P>
                     <strong>Address:</strong> {address}
                   </P>
                 </Col>
-                <Col md={12}>
+                <Col lg={12} md={6}>
                   {" "}
                   <P>
                     <strong>Apt, Suite, Unit:</strong> {address2}
                   </P>
                 </Col>
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   {" "}
                   <P>
                     <strong>City:</strong> {city}
                   </P>
                 </Col>
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   {" "}
                   <P>
                     <strong>State:</strong> {state}
                   </P>
                 </Col>
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   {" "}
                   <P>
                     <strong>Zip:</strong> {zip}
                   </P>
                 </Col>
-                <Col md={6}>
+                <Col lg={6} md={6}>
                   {" "}
                   <P>
                     <strong>Phone#:</strong> {formatPhone(phoneNumber)}{" "}
@@ -128,7 +128,7 @@ function AdminDashboard() {
         </Row>
 
         <Row className="mt-4 mb-4 pb-4">
-          <Col md={3} className="mt-4">
+          <Col lg={3} md={6} className="mt-4">
             <Link className="dash-link" to="/admin/ticketrequest">
               <Button outline color="secondary" size="lg" block>
                 {" "}
@@ -137,7 +137,8 @@ function AdminDashboard() {
               </Button>
             </Link>
           </Col>
-          <Col md={3} className="mt-4">
+
+          <Col lg={3} md={6} className="mt-4">
             <Link className="dash-link" to="/admin/ticketlist">
               <Button outline color="secondary" size="lg" block>
                 <Icon className="far fa-hourglass fa-1x mr-3 dash-icon" />
@@ -145,7 +146,8 @@ function AdminDashboard() {
               </Button>
             </Link>
           </Col>
-          <Col md={3} className="mt-4">
+
+          <Col lg={3} md={6} className="mt-4">
             <Button
               onClick={showUpdateForm}
               outline
@@ -157,7 +159,8 @@ function AdminDashboard() {
               Update Profile
             </Button>
           </Col>
-          <Col md={3} className="mt-4">
+
+          <Col lg={3} md={6} className="mt-4">
             <Link className="dash-link" to="/admin/messages">
               <Button outline color="secondary" size="lg" block>
                 <Icon className="far fa-question-circle fa-1x mr-3 dash-icon" />

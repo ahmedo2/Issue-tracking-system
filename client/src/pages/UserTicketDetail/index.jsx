@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+// import "./style.css";
 import Moment from "react-moment";
 import {
   Container,
@@ -13,54 +14,54 @@ import {
 } from "reactstrap";
 import { H1, P } from "../../components/Tags";
 import MainNav from "../../components/MainNav";
+import ImageLoader from "../../components/ImageLoader";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   addComment,
-  isNewComment,
   postSuccess,
   addImage,
   isLoadingImage,
+  isNewComment,
 } from "../../actions/ticketAction";
 import { COMMENT_ERROR } from "../../actions/actions";
 import { clearErrors } from "../../actions/authAction";
 import Icon from "../../components/Icon";
-import ImageLoader from "../../components/ImageLoader";
 
 function UserTicketDetail(props) {
   const user = useSelector((state) => state.authReducer.user);
   const { currentTicket, isPostSuccess, isLoading } = useSelector(
     (state) => state.ticketReducer
   );
-  // const isPostSuccess = useSelector(
-  //   (state) => state.ticketReducer.isPostSuccess
-  // );
   const error = useSelector((state) => state.errorReducer);
+
   const { _id, tixId, date, subject, description, status, comments, images } =
     currentTicket;
-  // const { isLoading } = ticket;
-  const history = useNavigate();
+  const { firstName, lastName } = user;
+
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const [commentPost, setCommentPost] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [msgComment, setMsgComment] = useState(null);
 
-  const { firstName, lastName } = user;
-
   useEffect(() => {
     dispatch(isNewComment(_id, null, false));
+
     if (error.id === COMMENT_ERROR) {
       setMsgComment(error.msg.msg);
       dispatch(isLoadingImage(false));
       dispatch(clearErrors());
     }
+
     if (isPostSuccess) {
       setMsgComment(null);
       dispatch(clearErrors());
       dispatch(postSuccess());
     }
-  }, [error, isPostSuccess]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, isPostSuccess, dispatch]);
 
   const handleCommentsForm = (e) => {
     e.preventDefault();
@@ -76,13 +77,6 @@ function UserTicketDetail(props) {
     setIsLoaded(!isLoaded);
     setCommentPost("");
   };
-
-  // const clearAndBack = () => {
-  //   setMsgComment(null);
-  //   dispatch(clearErrors());
-  //   history.goBack();
-  //   dispatch(postSuccess());
-  // };
 
   const statusIcon = () => {
     if (status === "Submitted") {
@@ -163,7 +157,7 @@ function UserTicketDetail(props) {
                       </P>
                     </Col>
                     <Col md={6} className="p-0">
-                      <P className="comment-text text-right">
+                      <P className="comment-text date-comment">
                         <strong>Date posted:</strong>{" "}
                         <Moment format="MMMM Do, YYYY">{comment.date}</Moment>
                       </P>
@@ -193,7 +187,6 @@ function UserTicketDetail(props) {
                 addImageAction={addImage}
               />
             </Col>
-
             <Col className="p-0 mt-3" md={12}>
               <Form className="logForm text-dark">
                 {msgComment ? <Alert color="danger">{msgComment}</Alert> : null}

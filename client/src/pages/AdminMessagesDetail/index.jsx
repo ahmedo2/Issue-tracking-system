@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "./style.css";
 import Moment from "react-moment";
 import { Container, Row, Col } from "reactstrap";
 import { H1, P } from "../../components/Tags";
@@ -9,8 +8,9 @@ import { useHistory } from "react-router-dom";
 import { useParams } from "react-router";
 import Icon from "../../components/Icon";
 import { changeMessageStatus } from "../../actions/messageAction";
+// import "./style.css";
 
-function AdminTicketDetail(props) {
+function AdminTicketDetail() {
   const messages = useSelector((state) => state.messageReducer.messages);
   let { id } = useParams();
   const dispatch = useDispatch();
@@ -21,14 +21,13 @@ function AdminTicketDetail(props) {
   const { firstName, lastName, email } = userId;
 
   useEffect(() => {
-    console.log(current);
-
     if (current[0].isMessageNew) {
       const objData = {
         isMessageNew: false,
       };
       dispatch(changeMessageStatus(id, objData));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -37,7 +36,9 @@ function AdminTicketDetail(props) {
       <Container>
         <Row className="global justify-content-center listRow">
           <Col md={12}>
-            <H1 className="display-4 text-center mt-4 mb-1">Ticket Details</H1>
+            <H1 className="display-4 text-center mt-4 mb-1">
+              Contact Messages
+            </H1>
           </Col>
           <Col className="p-4" md={12}>
             <Row form className="detail-container">

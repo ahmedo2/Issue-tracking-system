@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { login, clearErrors } from "../../actions/authAction";
-import { P } from "../Tags";
 import {
   Container,
   Row,
@@ -14,25 +10,28 @@ import {
   Input,
   Alert,
 } from "reactstrap";
+import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { login, clearErrors } from "../../actions/authAction";
+import { P } from "../Tags";
+import Icon from "../Icon";
 
 function Login() {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowClick = () => setShowPassword(!showPassword);
+  const { isAuthenticated, user } = useSelector((state) => state.authReducer);
+  const error = useSelector((state) => state.errorReducer);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [msg, setMsg] = useState(null);
-
-  const { isAuthenticated, user } = useSelector((state) => state.authReducer);
-  const error = useSelector((state) => state.errorReducer);
-  const dispatch = useDispatch();
-
-  const history = useNavigate();
+  const [spinner, setSpinner] = useState("Login");
 
   useEffect(() => {
     if (error.id === "LOGIN_FAIL") {
       setMsg(error.msg.msg);
+      setSpinner("Login");
     } else {
       setMsg(null);
     }
@@ -44,10 +43,12 @@ function Login() {
       dispatch(clearErrors());
       history.push("/admin/dashboard");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, isAuthenticated, dispatch, history]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    setSpinner(<Icon className="fas fa-spinner fa-pulse" />);
     const dataObj = {
       email,
       password,
@@ -61,8 +62,7 @@ function Login() {
     <Container>
       <P className="lead loginHeadText text-center text-dark">Login</P>
       <Row className="mx-auto">
-        <Col md={4} className="mx-auto">
-          {msg ? <Alert color="danger">{msg}</Alert> : null}
+        <Col xl={4} md={8} className="mx-auto">
           <Form className="logForm bg-white p-4 text-dark">
             <FormGroup>
               <Label for="loginEmail">Email</Label>
@@ -85,23 +85,24 @@ function Login() {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleSelect">Select</Label>
+              <Label for="loginRoleSelect">Select</Label>
               <Input
+                defaultValue={"Default"}
                 type="select"
                 name="select"
-                id="exampleSelect"
+                id="loginRoleSelect"
                 onChange={(e) => setRole(e.target.value)}
               >
                 <option value="Default" disabled>
                   Please select:
                 </option>
                 <option value="resident">Resident</option>
-                <option value="manager">Manager</option>
                 <option value="admin">Administrator</option>
               </Input>
             </FormGroup>
+            {msg ? <Alert color="danger">{msg}</Alert> : null}
             <Button onClick={handleFormSubmit} color="dark" size="lg" block>
-              LogIn
+              {spinner}
             </Button>
           </Form>
         </Col>

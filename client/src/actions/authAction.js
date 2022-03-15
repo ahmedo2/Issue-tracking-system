@@ -1,182 +1,205 @@
 import axios from "axios";
 import {
-  LOAD_TICKETS,
-  LOAD_TICKET_ERROR,
-  LOAD_USER_TICKETS,
-  POST_TICKET,
-  UPDATE_TICKET,
-  CLEAR_TICKETS,
-  POST_ERROR,
-  POST_SUCCESS,
-  CURRENT_TICKET,
-  POST_COMMENT,
-  IS_NEW_COMMENT,
-  COMMENT_ERROR,
-  POST_IMAGE,
-  IMAGE_ERROR,
-  IS_LOADING,
-  POST_SINGLE_IMAGE,
-  CLEAR_SINGLE_IMAGE,
+  UPDATE_PROFILE,
+  UPDATE_ERROR,
+  UPDATE_SUCCESS,
+  UPDATE_PROFILE_IMAGE,
   UPDATE_PROFILE_IMAGE_ERROR,
-  DELETE_NEW_TIX_IMAGE,
+  PROFILE_IMAGE_LOADING,
+  DELETE_PROFILE_IMAGE,
+  GET_ERRORS,
+  CLEAR_ERRORS,
+  USER_LOADING,
+  USER_LOADED,
+  ALL_USERS_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  LOGOUT_SUCCESS,
 } from "../actions/actions";
-import { tokenConfig, returnErrors } from "./authAction";
 
-// ##### Tickets handlers #####
-
-export const loadAllTickets = () => async (dispatch) => {
-  try {
-    const res = await axios.get("/api/tickets");
-    dispatch({
-      type: LOAD_TICKETS,
-      payload: res.data,
-    });
-  } catch (err) {
-    dispatch(
-      returnErrors(err.response.data, err.response.status, LOAD_TICKET_ERROR)
-    );
-  }
-};
-
-export const loadUserTickets = () => async (dispatch, getState) => {
-  try {
-    const res = await axios.get("/api/users/user", tokenConfig(getState));
-    dispatch({
-      type: LOAD_USER_TICKETS,
-      payload: res.data.tickets,
-    });
-  } catch (err) {
-    dispatch(
-      returnErrors(err.response.data, err.response.status, LOAD_TICKET_ERROR)
-    );
-  }
-};
-
-export const addTicket = (data) => async (dispatch) => {
-  try {
-    await axios.post("/api/tickets", data);
-    dispatch({
-      type: POST_TICKET,
-    });
-  } catch (err) {
-    dispatch(returnErrors(err.response.data, err.response.status, POST_ERROR));
-  }
-};
-
-export const postSuccess = () => {
+// Return errors
+export const returnErrors = (msg, status, id = null) => {
   return {
-    type: POST_SUCCESS,
+    type: GET_ERRORS,
+    payload: { msg, status, id },
   };
 };
 
-// ##### Comments handlers #####
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS,
+  };
+};
 
-export const addComment = (id, data) => async (dispatch) => {
+// Check token and load user
+
+export const loadUser = () => async (dispatch, getState) => {
+  //User loading
+  dispatch({ type: USER_LOADING });
   try {
-    const res = await axios.put("/api/ticket/comment/" + id, data);
+    const res = await axios.get("/api/users/user", tokenConfig(getState));
     dispatch({
-      type: POST_COMMENT,
+      type: USER_LOADED,
       payload: res.data,
     });
   } catch (err) {
-    dispatch(
-      returnErrors(err.response.data, err.response.status, COMMENT_ERROR)
-    );
+    dispatch(returnErrors(err.response.data, err.response.status));
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
+};
+export const loadAllUsers = () => async (dispatch, getState) => {
+  try {
+    const res = await axios.get("/api/users", tokenConfig(getState));
+    dispatch({
+      type: ALL_USERS_LOADED,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch(returnErrors(err.response.data, err.response.status));
+    dispatch({
+      type: AUTH_ERROR,
+    });
   }
 };
 
-export const isNewComment =
-  (id, newUserComment, newAdminComment) => async (dispatch) => {
+// Register User
+export const login =
+  ({ email, password, role }) =>
+  async (dispatch) => {
     try {
-      let dataObj;
-      if (newUserComment === null) {
-        dataObj = { newAdminComment };
-      }
-      if (newAdminComment === null) {
-        dataObj = { newUserComment };
-      }
-
-      const res = await axios.put("/api/ticket/comment/new/" + id, dataObj);
+      // headers
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      // Request Body
+      const body = JSON.stringify({ email, password, role });
+      const res = await axios.post("/api/users/auth", body, config);
       dispatch({
-        type: IS_NEW_COMMENT,
+        type: LOGIN_SUCCESS,
         payload: res.data,
       });
     } catch (err) {
       dispatch(
-        returnErrors(err.response.data, err.response.status, COMMENT_ERROR)
+        returnErrors(err.response.data, err.response.status, LOGIN_FAIL)
       );
+      dispatch({
+        type: LOGIN_FAIL,
+      });
     }
   };
-export const changeTixStatus = (id, data) => async (dispatch) => {
+
+export const register =
+  ({
+    firstName,
+    lastName,
+    email,
+    address,
+    address2,
+    city,
+    state,
+    zip,
+    phoneNumber,
+    password,
+    confirmPassword,
+    role,
+  }) =>
+  async (dispatch) => {
+    try {
+      // headers
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      // Request Body
+      const body = JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        address,
+        address2,
+        city,
+        state,
+        zip,
+        phoneNumber,
+        password,
+        confirmPassword,
+        role,
+      });
+
+      const res = await axios.post("/api/users/register", body, config);
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, REGISTER_FAIL)
+      );
+      dispatch({
+        type: REGISTER_FAIL,
+      });
+    }
+  };
+
+export const logout = () => {
+  return {
+    type: LOGOUT_SUCCESS,
+  };
+};
+
+// Setup Config/headers and token
+export const tokenConfig = (getState) => {
+  //get token from local storage
+  const token = getState().authReducer.token;
+  // Headers
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+  if (token) {
+    config.headers["x-auth-token"] = token;
+  }
+
+  return config;
+};
+
+export const updateProfile = (id, data) => async (dispatch, getState) => {
   try {
-    const res = await axios.put("/api/ticket/update/" + id, data);
+    const res = await axios.put(
+      "/api/users/user/update/" + id,
+      data,
+      tokenConfig(getState)
+    );
     dispatch({
-      type: UPDATE_TICKET,
+      type: UPDATE_PROFILE,
       payload: res.data,
     });
   } catch (err) {
     dispatch(
-      returnErrors(err.response.data, err.response.status, COMMENT_ERROR)
+      returnErrors(err.response.data, err.response.status, UPDATE_ERROR)
     );
-  }
-};
-
-export const clearTickets = () => {
-  return {
-    type: CLEAR_TICKETS,
-  };
-};
-
-export const currentTicket = (id) => {
-  return {
-    type: CURRENT_TICKET,
-    payload: id,
-  };
-};
-
-// ##### Image handlers #####
-
-export const addImage = (data, config) => async (dispatch) => {
-  try {
-    const res = await axios.post("/api/ticket/image/upload", data, config);
     dispatch({
-      type: POST_IMAGE,
-      payload: res.data,
+      type: UPDATE_ERROR,
     });
-  } catch (err) {
-    dispatch(returnErrors(err.response.data, err.response.status, IMAGE_ERROR));
-  }
-};
-export const addImageNewTix = (data, config) => async (dispatch) => {
-  try {
-    const res = await axios.post("/api/tickets/newimage/upload", data, config);
-    dispatch({
-      type: POST_SINGLE_IMAGE,
-      payload: res.data.file.filename,
-    });
-  } catch (err) {
-    dispatch(returnErrors(err.response.data, err.response.status, IMAGE_ERROR));
   }
 };
 
-export const isLoadingImage = (status) => {
-  return {
-    type: IS_LOADING,
-    payload: status,
-  };
-};
-export const clearCurrentImages = () => {
-  return {
-    type: CLEAR_SINGLE_IMAGE,
-  };
-};
-
-export const imageDeleteNewTix = (filename) => async (dispatch) => {
+export const updateProfileImage = (data, config) => async (dispatch) => {
   try {
-    await axios.delete("/api/ticket/newimage/" + filename);
+    const res = await axios.post("/api/users/user/image/upload", data, config);
     dispatch({
-      type: DELETE_NEW_TIX_IMAGE,
-      payload: filename,
+      type: UPDATE_PROFILE_IMAGE,
+      payload: res.data.image,
     });
   } catch (err) {
     dispatch(
@@ -187,4 +210,32 @@ export const imageDeleteNewTix = (filename) => async (dispatch) => {
       )
     );
   }
+};
+export const isLoadingProfileImage = (status) => {
+  return {
+    type: PROFILE_IMAGE_LOADING,
+    payload: status,
+  };
+};
+export const deleteProfileImage = (filename, userId) => async (dispatch) => {
+  try {
+    await axios.delete("/api/ticket/image/" + userId + "/" + filename);
+    dispatch({
+      type: DELETE_PROFILE_IMAGE,
+    });
+  } catch (err) {
+    dispatch(
+      returnErrors(
+        err.response.data,
+        err.response.status,
+        UPDATE_PROFILE_IMAGE_ERROR
+      )
+    );
+  }
+};
+
+export const updateSuccess = () => {
+  return {
+    type: UPDATE_SUCCESS,
+  };
 };

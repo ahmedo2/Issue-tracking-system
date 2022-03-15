@@ -1,8 +1,17 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from "react";
 import Icon from "../Icon";
-import { Form, FormGroup, Input, Button, Row, Col, Alert } from "reactstrap";
+import "./style.css";
+import userIcon from "./images/profile.png";
+import {
+  Form,
+  FormGroup,
+  CustomInput,
+  Button,
+  Row,
+  Col,
+  Alert,
+} from "reactstrap";
+import { P, Img } from "../Tags";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateProfileImage,
@@ -10,14 +19,12 @@ import {
   deleteProfileImage,
   clearErrors,
 } from "../../actions/authAction";
-import { P, Img } from "../Tags";
 import { UPDATE_PROFILE_IMAGE_ERROR } from "../../actions/actions";
-import userIcon from "./images/profile.png";
-import "./style.css";
 
 function ProfileImage() {
   const { user, isImageLoading } = useSelector((state) => state.authReducer);
   const error = useSelector((state) => state.errorReducer);
+
   const dispatch = useDispatch();
 
   const { _id, image } = user;
@@ -33,13 +40,11 @@ function ProfileImage() {
       dispatch(isLoadingProfileImage());
       dispatch(clearErrors());
     }
-  }, [error]);
+  }, [error, dispatch]);
 
   const handleProfileImageForm = (e) => {
     e.preventDefault();
-
     dispatch(isLoadingProfileImage(true));
-
     const formData = new FormData();
     formData.append("file", profileImg);
     formData.append("userId", _id);
@@ -71,21 +76,26 @@ function ProfileImage() {
               </div>
             ) : (
               <div className="loadingBack">
-                <img
+                <Img
                   className="profileImg rounded-circle"
                   src={"/api/ticket/image/" + image}
+                  alt="Profile Headshot"
                 />
-                <a
+                <Button
                   className="img-del-btn bg-dark text-white"
                   onClick={(e) => deleteImage(e, image, user._id)}
                 >
-                  <Icon className="fas fa-trash-alt" />
-                </a>
+                  <Icon className="fas fa-trash-alt img-icon" />
+                </Button>
               </div>
             )
           ) : (
             <div>
-              <img className="userIcon rounded-circle" src={userIcon} />
+              <img
+                alt="Profile Icon"
+                className="userIcon rounded-circle"
+                src={userIcon}
+              />
             </div>
           )}
         </Col>
@@ -102,7 +112,7 @@ function ProfileImage() {
                 ) : null}
                 <P className="profileText">Recomended size: 250px x 250px</P>
                 <FormGroup>
-                  <Input
+                  <CustomInput
                     className="profile-input"
                     type="file"
                     id="ImageBrowserProfile"

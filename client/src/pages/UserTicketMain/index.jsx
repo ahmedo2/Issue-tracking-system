@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { P } from "../../components/Tags";
 import {
   Container,
   Row,
@@ -11,10 +10,12 @@ import {
   Input,
   Alert,
 } from "reactstrap";
+import { P } from "../../components/Tags";
 import MainNav from "../../components/MainNav";
+import ImageLoader from "../../components/ImageLoader";
 import Moment from "react-moment";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Icon from "../../components/Icon";
 import { POST_ERROR } from "../../actions/actions";
 import {
@@ -26,7 +27,7 @@ import {
   imageDeleteNewTix,
 } from "../../actions/ticketAction";
 import { clearErrors } from "../../actions/authAction";
-import ImageLoader from "../../components/ImageLoader";
+// import "./style.css";
 
 function TicketMain() {
   const user = useSelector((state) => state.authReducer.user);
@@ -34,8 +35,9 @@ function TicketMain() {
     (state) => state.ticketReducer
   );
   const error = useSelector((state) => state.errorReducer);
-  const history = useNavigate();
+  const history = useHistory();
   const dispatch = useDispatch();
+
   const [date] = useState(Date.now());
   const [tixId, setTixId] = useState("");
   const [subject, setSubject] = useState("");
@@ -43,12 +45,15 @@ function TicketMain() {
   const [status] = useState("Submitted");
   const [msg, setMsg] = useState(null);
 
+  const [spinner, setSpinner] = useState("Submit Ticket");
+
   useEffect(() => {
-    // console.log("current", currentImage);
     dispatch(isLoadingImage(false));
     generateTixId();
+
     if (error.id === POST_ERROR) {
       setMsg(error.msg.msg);
+      setSpinner("Submit Ticket");
       dispatch(clearErrors());
     }
 
@@ -58,11 +63,12 @@ function TicketMain() {
       history.push("/user/ticketlist");
       dispatch(postSuccess());
     }
-    // console.log("Array", imageArr);
-  }, [error, isPostSuccess, currentImage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, isPostSuccess, currentImage, history, dispatch]);
 
   const handleTicketForm = (e) => {
     e.preventDefault();
+    setSpinner(<Icon className="fas fa-spinner fa-pulse" />);
 
     const dataObj = {
       userId: user._id,
@@ -70,9 +76,9 @@ function TicketMain() {
       tixId,
       subject,
       description,
+      images: currentImage,
       status,
     };
-
     dispatch(addTicket(dataObj));
     dispatch(clearCurrentImages());
   };
@@ -98,31 +104,34 @@ function TicketMain() {
   };
 
   const dateToFormat = date;
-
   return (
     <React.Fragment>
       <MainNav />
-
       <Container>
-        <Row className="logForm mt-4 mb-4">
+        <Row className="logForm mt-4">
           <Col className="p-0" md={12}>
-            <Form className="mt-4 pl-4 pr-4 pb-0 pt-4 text-dark">
-              <h2 className="display-4 text-dark text-center">
+            <Form className="pl-4 pr-4 pb-0 text-dark">
+              <h2
+                className="display-4 text-dark text-center"
+                style={{ fontSize: "2.8em" }}
+              >
                 Request Service Ticket
               </h2>
               {msg ? <Alert color="danger">{msg}</Alert> : null}
               <Row form>
                 <Col md={6}>
-                  <P className="mt-4">
+                  <P className="mt-1">
                     <Moment format="MMMM Do, YYYY">{dateToFormat}</Moment>
                   </P>
                 </Col>
                 <Col md={6}>
-                  <P className="mt-4 text-right">Ticket ID: {tixId}</P>
+                  <P className="mt-1 tixid-text">Ticket ID: {tixId}</P>
                 </Col>
                 <Col md={12}>
-                  <FormGroup>
-                    <Label for="ticketSubject">Subject</Label>
+                  <FormGroup className="mb-1">
+                    <Label for="ticketSubject">
+                      <strong>Subject</strong>
+                    </Label>
                     <Input
                       type="text"
                       name="subject"
@@ -135,8 +144,10 @@ function TicketMain() {
                   </FormGroup>
                 </Col>
                 <Col md={12}>
-                  <FormGroup>
-                    <Label for="ticketDescription">Description</Label>
+                  <FormGroup className="mb-1">
+                    <Label for="ticketDescription">
+                      <strong>Description</strong>
+                    </Label>
                     <Input
                       type="textarea"
                       name="description"
@@ -152,7 +163,9 @@ function TicketMain() {
             </Form>
           </Col>
           <Col className="pl-4 pr-4 pt-0" md={12}>
-            <P className="mt-1">Images:</P>
+            <P className="mb-1">
+              <strong>Images:</strong>
+            </P>
             <ImageLoader
               _id={""}
               images={[]}
@@ -164,13 +177,15 @@ function TicketMain() {
             />
           </Col>
 
-          <Col className="p-4" md={12}>
+          <Col className="pl-4 pr-4 pt-1 text-center" md={12}>
             <Button
-              className="mt-1 mb-4 ml-1"
+              size="lg"
+              block
+              className="mt-1 mb-2"
               onClick={handleTicketForm}
               color="dark"
             >
-              Submit Ticket
+              {spinner}
             </Button>
           </Col>
         </Row>

@@ -6,12 +6,15 @@ import MainNav from "../../components/MainNav";
 import ProfileImage from "../../components/ProfileImage";
 import UpdateUserForm from "../../components/UpdateUserForm";
 import { useSelector, useDispatch } from "react-redux";
-import { loadUserTickets } from "../../actions/ticketAction";
+import {
+  loadUserTickets,
+  clearCurrentImages,
+} from "../../actions/ticketAction";
 import Icon from "../../components/Icon";
+// import "./style.css";
 
 function UserDashboard() {
   const user = useSelector((state) => state.authReducer);
-  const tickets = useSelector((state) => state.ticketReducer.userTickets);
   const dispatch = useDispatch();
   const {
     firstName,
@@ -28,11 +31,8 @@ function UserDashboard() {
 
   useEffect(() => {
     dispatch(loadUserTickets());
-  }, []);
-
-  const showUpdateForm = () => {
-    setIsUpdateForm(!isUpdateForm);
-  };
+    dispatch(clearCurrentImages());
+  });
 
   const formatPhone = (phoneNumberString) => {
     const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
@@ -43,78 +43,81 @@ function UserDashboard() {
     return null;
   };
 
+  const showUpdateForm = () => {
+    setIsUpdateForm(!isUpdateForm);
+  };
+
   return (
     <React.Fragment>
       <MainNav />
       <Container>
         <Row>
-          <Col md={6} className="text-center">
+          <Col lg={6} className="text-center">
             <H1 className="display-4 mb-4 mt-3 text-center text-dark">
               Hello {firstName}!
             </H1>
-
             <ProfileImage />
           </Col>
           {isUpdateForm ? (
             <UpdateUserForm hideUpdateForm={showUpdateForm} />
           ) : (
-            <Col md={6} className="mt-4 profileInfo">
+            <Col lg={6} className="mt-4 profileInfo">
               <Row>
-                <Col md={12}>
+                <Col lg={12}>
                   {" "}
                   <H1 className="display-5 mb-4 mt-1 text-center text-dark">
                     Profile Info
                   </H1>
                 </Col>
-                <Col md={12}>
+                <Col lg={12} md={6}>
                   {" "}
                   <P className="bk-white">
                     <strong>email:</strong> {email}
                   </P>
                 </Col>
-                <Col md={6}>
+                <Col lg={6} md={6}>
                   {" "}
                   <P>
                     <strong>First Name:</strong> {firstName}
                   </P>
                 </Col>
-                <Col md={6}>
+                <Col lg={6} md={6}>
                   {" "}
                   <P>
                     <strong>Last Name:</strong> {lastName}
                   </P>
                 </Col>
-                <Col md={12}>
+                <Col lg={12} md={6}>
                   {" "}
                   <P>
                     <strong>Address:</strong> {address}
                   </P>
                 </Col>
-                <Col md={12}>
+                <Col lg={12} md={6}>
                   {" "}
                   <P>
                     <strong>Apt, Suite, Unit:</strong> {address2}
                   </P>
                 </Col>
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   {" "}
                   <P>
                     <strong>City:</strong> {city}
                   </P>
                 </Col>
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   {" "}
                   <P>
                     <strong>State:</strong> {state}
                   </P>
                 </Col>
-                <Col md={4}>
+                <Col lg={4} md={6}>
                   {" "}
                   <P>
                     <strong>Zip:</strong> {zip}
                   </P>
                 </Col>
-                <Col md={6}>
+                <Col lg={6} md={6}>
                   {" "}
                   <P>
                     <strong>Phone#:</strong> {formatPhone(phoneNumber)}{" "}
@@ -126,7 +129,7 @@ function UserDashboard() {
         </Row>
 
         <Row className="mt-4 mb-4 pb-4">
-          <Col md={3} className="mt-4">
+          <Col lg={3} md={6} className="mt-4">
             <Link className="dash-link" to="/user/ticketrequest">
               <Button outline color="secondary" size="lg" block>
                 {" "}
@@ -135,7 +138,7 @@ function UserDashboard() {
               </Button>
             </Link>
           </Col>
-          <Col md={3} className="mt-4">
+          <Col lg={3} md={6} className="mt-4">
             <Link className="dash-link" to="/user/ticketlist">
               <Button outline color="secondary" size="lg" block>
                 <Icon className="far fa-hourglass fa-1x mr-3 dash-icon" />
@@ -143,7 +146,7 @@ function UserDashboard() {
               </Button>
             </Link>
           </Col>
-          <Col md={3} className="mt-4">
+          <Col lg={3} md={6} className="mt-4">
             <Button
               onClick={showUpdateForm}
               outline
@@ -155,7 +158,7 @@ function UserDashboard() {
               Update Profile
             </Button>
           </Col>
-          <Col md={3} className="mt-4">
+          <Col lg={3} md={6} className="mt-4">
             <Link className="dash-link" to="/user/contact">
               <Button outline color="secondary" size="lg" block>
                 <Icon className="far fa-question-circle fa-1x mr-3 dash-icon" />

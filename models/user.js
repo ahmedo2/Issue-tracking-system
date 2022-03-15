@@ -46,13 +46,13 @@ const UserSchema = new Schema({
   image: {
     type: String,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
   role: {
     type: String,
     require: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
   tickets: [
     {

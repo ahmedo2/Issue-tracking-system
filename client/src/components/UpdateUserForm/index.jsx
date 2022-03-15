@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Alert,
-} from "reactstrap";
+import { Row, Col, Button, Form, FormGroup, Input, Alert } from "reactstrap";
 import { H1, P } from "../Tags";
 import Icon from "../Icon";
 import { useSelector, useDispatch } from "react-redux";
@@ -34,9 +24,12 @@ export default function UpdateUserForm(props) {
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [msg, setMsg] = useState(null);
 
+  const [spinner, setSpinner] = useState("Submit Changes");
+
   useEffect(() => {
     if (error.id === UPDATE_ERROR) {
       setMsg(error.msg.msg);
+      setSpinner("Submit Changes");
     }
     if (isUpdateSuccess) {
       setMsg(null);
@@ -44,7 +37,7 @@ export default function UpdateUserForm(props) {
       props.hideUpdateForm();
       dispatch(updateSuccess());
     }
-  }, [error, isUpdateSuccess]);
+  }, [error, isUpdateSuccess, props, dispatch]);
 
   const formatPhone = (phoneNumberString) => {
     const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
@@ -57,6 +50,7 @@ export default function UpdateUserForm(props) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    setSpinner(<Icon className="fas fa-spinner fa-pulse" />);
 
     const dataObj = {
       firstName,
@@ -74,31 +68,31 @@ export default function UpdateUserForm(props) {
 
   return (
     <React.Fragment>
-      <Col md={6} className="mt-4 profileInfo">
+      <Col lg={6} className="mt-4 profileInfo">
         <Form className="logForm bg-light p-4 text-dark">
-          <Col md={12} className=" text-right">
+          <Col lg={12} className=" text-right">
             <Icon
               onClick={props.hideUpdateForm}
               className="far fa-window-close update-icon"
             ></Icon>
           </Col>
           <Row>
-            <Col md={12}>
+            <Col lg={12}>
               {" "}
               <H1 className="display-5 mb-4 mt-1 text-center text-dark">
                 Update Profile
               </H1>
             </Col>
-            <Col md={12}>
+            <Col lg={12}>
               {msg ? <Alert color="danger">{msg}</Alert> : null}
             </Col>
-            <Col md={12}>
+            <Col lg={12}>
               {" "}
               <P className="bk-white">
                 <strong>email:</strong> {user.email}
               </P>
             </Col>
-            <Col md={6} className="pr-2">
+            <Col lg={6} className="">
               {" "}
               <P>
                 <strong>First Name:</strong>
@@ -117,7 +111,7 @@ export default function UpdateUserForm(props) {
               </FormGroup>
             </Col>
 
-            <Col md={6} className="pl-0">
+            <Col lg={6} className="">
               {" "}
               <P>
                 <strong>Last Name:</strong>
@@ -135,7 +129,7 @@ export default function UpdateUserForm(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={12}>
+            <Col lg={12}>
               {" "}
               <P>
                 <strong>Address:</strong>
@@ -153,7 +147,7 @@ export default function UpdateUserForm(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={12}>
+            <Col lg={12}>
               {" "}
               <P>
                 <strong>Apt, Suite, Unit:</strong>
@@ -171,7 +165,7 @@ export default function UpdateUserForm(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={4} className="pr-2">
+            <Col lg={4} className="">
               {" "}
               <P>
                 <strong>City:</strong>
@@ -189,7 +183,7 @@ export default function UpdateUserForm(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={4} className="pr-2 pl-0">
+            <Col lg={4} className="">
               {" "}
               <P>
                 <strong>State:</strong>
@@ -207,7 +201,7 @@ export default function UpdateUserForm(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={4} className="pl-0">
+            <Col lg={4} className="">
               {" "}
               <P>
                 <strong>Zip:</strong>
@@ -225,7 +219,7 @@ export default function UpdateUserForm(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={6}>
+            <Col lg={6}>
               {" "}
               <P>
                 <strong>Phone#:</strong>
@@ -243,9 +237,9 @@ export default function UpdateUserForm(props) {
                 />
               </FormGroup>
             </Col>
-            <Col md={12}>
+            <Col lg={12}>
               <Button onClick={handleFormSubmit} color="dark" size="lg" block>
-                Submit Changes
+                {spinner}
               </Button>
             </Col>
           </Row>

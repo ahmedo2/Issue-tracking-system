@@ -1,7 +1,7 @@
-const config = require("config");
+const config = require("../config/config");
 const crypto = require("crypto");
 const multer = require("multer");
-const GridFsStorage = require("multer-gridfs-storage");
+const { GridFsStorage } = require("multer-gridfs-storage");
 const path = require("path");
 
 const db = config.MONGO_URI;
@@ -10,8 +10,6 @@ const storage = new GridFsStorage({
   url: db,
   file: (req, file) => {
     return new Promise((resolve, reject) => {
-      console.log("File Middleware", file);
-
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
           return reject(err);

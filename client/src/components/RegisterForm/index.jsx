@@ -1,8 +1,5 @@
-/* eslint-disable no-unused-vars */
-
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { P } from "../Tags";
+import { useHistory } from "react-router-dom";
 import {
   Container,
   Row,
@@ -14,17 +11,19 @@ import {
   Input,
   Alert,
 } from "reactstrap";
+import { P } from "../Tags";
+import Icon from "../Icon";
 import { useSelector, useDispatch } from "react-redux";
 import { register, clearErrors } from "../../actions/authAction";
 
-function Register() {
+function RegisterForm() {
   const isAuthenticated = useSelector(
     (state) => state.authReducer.isAuthenticated
   );
   const error = useSelector((state) => state.errorReducer);
   const dispatch = useDispatch();
 
-  const history = useNavigate();
+  const history = useHistory();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -99,10 +98,12 @@ function Register() {
     "WI",
     "WY",
   ]);
+  const [spinner, setSpinner] = useState("Register");
 
   useEffect(() => {
     if (error.id === "REGISTER_FAIL") {
       setMsg(error.msg.msg);
+      setSpinner("Register");
     } else {
       setMsg(null);
     }
@@ -114,7 +115,7 @@ function Register() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
+    setSpinner(<Icon className="fas fa-spinner fa-pulse" />);
     const dataObj = {
       firstName,
       lastName,
@@ -132,21 +133,21 @@ function Register() {
 
     dispatch(register(dataObj));
   };
-
-  const formatPhone = (phoneNumberString) => {
+  const formatPhone = (phoneNumberString = "") => {
     const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
     const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
     if (match) {
       return "(" + match[1] + ") " + match[2] + "-" + match[3];
+    } else {
+      return phoneNumberString;
     }
-    return "";
   };
 
   return (
     <Container>
       <P className="lead loginHeadText text-center text-dark">Register</P>
       <Row className="mx-auto">
-        <Col md={6} className="mx-auto">
+        <Col xl={6} lg={8} md={10} className="mx-auto">
           <Form className="logForm bg-light p-4 text-dark">
             <Row form>
               <Col md={6}>
@@ -184,7 +185,7 @@ function Register() {
                     type="email"
                     name="email"
                     id="registerEmail"
-                    placeholder="youremail@emil.com"
+                    placeholder="youremail@email.com"
                     onChange={(e) => {
                       setEmail(e.target.value);
                     }}
@@ -271,10 +272,10 @@ function Register() {
                   <Label for="registerPhone">Phone Number</Label>
                   <Input
                     type="phone"
-                    value={formatPhone(phoneNumber)}
                     name="zip"
                     id="registerPhone"
                     placeholder="(407) 222-2222"
+                    value={formatPhone(phoneNumber)}
                     onChange={(e) => {
                       setPhoneNumber(e.target.value);
                     }}
@@ -295,7 +296,7 @@ function Register() {
                     id="registerPassword"
                     placeholder="Password"
                     onChange={(e) => {
-                      setConfirmPassword(e.target.value);
+                      setPassword(e.target.value);
                     }}
                   />
                 </FormGroup>
@@ -317,7 +318,7 @@ function Register() {
             </Row>
             {msg ? <Alert color="danger">{msg}</Alert> : null}
             <Button onClick={handleFormSubmit} color="dark" size="lg" block>
-              Register
+              {spinner}
             </Button>
           </Form>
         </Col>
@@ -326,4 +327,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterForm;

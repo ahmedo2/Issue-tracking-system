@@ -15,6 +15,7 @@ import {
   LOGOUT_SUCCESS,
   ALL_USERS_LOADED,
 } from "../actions/actions";
+
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: false,
@@ -27,12 +28,12 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case "USER_LOADING":
+    case USER_LOADING:
       return {
         ...state,
         isLoading: true,
       };
-    case "USER_LOADED":
+    case USER_LOADED:
       return {
         ...state,
         isAuthenticated: true,
@@ -44,8 +45,9 @@ export default function (state = initialState, action) {
         ...state,
         allUsers: action.payload,
       };
-    case "LOGIN_SUCCESS":
-    case "REGISTER_SUCCESS":
+    //if user.role===admin - admin-token else user-token
+    case LOGIN_SUCCESS:
+    case REGISTER_SUCCESS:
       localStorage.setItem("token", action.payload.token);
       return {
         ...state,
@@ -62,8 +64,11 @@ export default function (state = initialState, action) {
         ...state,
         token: null,
         user: null,
+        allUsers: null,
         isAuthenticated: false,
         isLoading: false,
+        isUpdateSuccess: false,
+        isImageLoading: true,
       };
     case UPDATE_PROFILE:
       const { firstName, lastName, address, address2, city, zip, phoneNumber } =
@@ -88,6 +93,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isUpdateSuccess: true,
+        isImageLoading: false,
         user: {
           ...state.user,
           image: action.payload,
@@ -112,21 +118,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isUpdateSuccess: false,
-      };
-    case "AUTH_ERROR":
-    case "LOGIN_FAIL":
-    case "LOGOUT_SUCCESS":
-    case "REGISTER_FAIL":
-      localStorage.removeItem("token");
-      return {
-        ...state,
-        token: null,
-        user: null,
-        allUsers: null,
-        isAuthenticated: false,
-        isLoading: false,
-        isUpdateSuccess: false,
-        isImageLoading: true,
       };
     default:
       return state;

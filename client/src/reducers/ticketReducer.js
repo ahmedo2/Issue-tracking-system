@@ -42,14 +42,17 @@ export default function (state = initialState, action) {
         ...state,
         isPostSuccess: true,
       };
+    case POST_SUCCESS:
+      return {
+        ...state,
+        isPostSuccess: false,
+      };
     case CURRENT_TICKET:
       state.currentTicket = {};
       const chosen =
         state.userTickets.length === 0
           ? state.allTickets.filter((ticket) => ticket._id === action.payload)
           : state.userTickets.filter((ticket) => ticket._id === action.payload);
-      console.log(chosen);
-
       return {
         ...state,
         currentTicket: chosen[0],
@@ -67,8 +70,6 @@ export default function (state = initialState, action) {
         isPostSuccess: true,
       };
     case IS_NEW_COMMENT:
-      console.log("REDUCER", action.payload);
-
       return {
         ...state,
         currentTicket: action.payload,
@@ -103,11 +104,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isLoading: action.payload,
-      };
-    case POST_SUCCESS:
-      return {
-        ...state,
-        isPostSuccess: false,
       };
     case CLEAR_TICKETS:
       return {

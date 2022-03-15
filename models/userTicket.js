@@ -15,9 +15,9 @@ const UserTicketSchema = new Schema({
     type: String,
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now,
+  status: {
+    type: String,
+    required: true,
   },
   comments: {
     type: Array,
@@ -33,9 +33,9 @@ const UserTicketSchema = new Schema({
   images: {
     type: Array,
   },
-  status: {
-    type: String,
-    required: true,
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 

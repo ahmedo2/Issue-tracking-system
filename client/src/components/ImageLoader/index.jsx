@@ -1,5 +1,5 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import "./style.css";
 import {
   Row,
@@ -10,20 +10,14 @@ import {
   Button,
   Alert,
 } from "reactstrap";
-import { P } from "../Tags";
-import { useDispatch } from "react-redux";
-import { addImage, isLoadingImage } from "../../actions/ticketAction";
+import { Img } from "../Tags";
+import Modal from "../Modal";
+import { isLoadingImage } from "../../actions/ticketAction";
 import { clearErrors } from "../../actions/authAction";
 import { IMAGE_ERROR } from "../../actions/actions";
-
 import Icon from "../Icon";
 
 function ImageLoader(props) {
-  // const ticket = useSelector(state => state.ticketReducer);
-
-  // const error = useSelector(state => state.errorReducer);
-  // const { _id, images } = ticket.currentTicket;
-  // const { isLoading, isPostSuccess } = ticket;
   const dispatch = useDispatch();
 
   const [image, setImage] = useState("");
@@ -35,10 +29,11 @@ function ImageLoader(props) {
       dispatch(isLoadingImage(false));
       dispatch(clearErrors());
     }
-  }, [props.error]);
+  }, [props.error, dispatch]);
 
   const handleImageForm = (e) => {
     e.preventDefault();
+
     dispatch(isLoadingImage(true));
     const formData = new FormData();
     formData.append("file", image);
@@ -63,11 +58,11 @@ function ImageLoader(props) {
 
   return (
     <React.Fragment>
-      <Col md={12}>
+      <Col lg={12}>
         <Form onSubmit={handleImageForm}>
           {msgImage ? <Alert color="danger">{msgImage}</Alert> : null}
           <Row>
-            <Col className="p-0" md={4}>
+            <Col className="p-0" lg={6}>
               <FormGroup className="mb-2">
                 <CustomInput
                   className="file-input"
@@ -81,18 +76,18 @@ function ImageLoader(props) {
                 />
               </FormGroup>
             </Col>
-            <Col className="text-center mb-2" md={2}>
+            <Col className="ImageSubmitBtn mb-2" lg={6}>
               <Button type="submit" color="dark">
-                Submit Image
+                Upload Image
               </Button>
             </Col>
           </Row>
         </Form>
       </Col>
-      <Col md={12} className="detail-box-wrapper">
+      <Col lg={12} className="detail-box-wrapper">
         {props.isLoading ? (
           <Row>
-            <Col className="text-center" md={12}>
+            <Col className="text-center" lg={12}>
               <Icon className="text-center mt-3 fas fa-spinner fa-pulse fa-3x" />
             </Col>
           </Row>
@@ -100,12 +95,14 @@ function ImageLoader(props) {
           props.images.map((img, i) => {
             return (
               <div key={i} className="loading">
-                <img
-                  className="tixImages"
-                  src={"/api/ticket/image/" + img}
-                  alt="Ticket Images"
-                  width="100%"
-                />
+                <Modal imgSrc={"/api/ticket/image/" + img}>
+                  <Img
+                    className="tixImages"
+                    src={"/api/ticket/image/" + img}
+                    alt="Ticket Images"
+                    width="100%"
+                  />
+                </Modal>
               </div>
             );
           })
@@ -113,18 +110,20 @@ function ImageLoader(props) {
           props.currentImages.map((img, i) => {
             return (
               <div key={i} className="loading">
-                <img
-                  className="tixImages"
-                  src={"/api/ticket/image/" + img}
-                  alt="Ticket Images"
-                  width="100%"
-                />
-                <a
-                  className="img-del-btn bg-dark text-white"
-                  onClick={() => removeImage(img)}
-                >
-                  <Icon className="fas fa-trash-alt" />
-                </a>
+                <Modal imgSrc={"/api/ticket/image/" + img}>
+                  <Img
+                    className="tixImages"
+                    src={"/api/ticket/image/" + img}
+                    alt="Ticket Images"
+                    width="100%"
+                  />
+                  <Button
+                    className="img-del-btn bg-dark text-white"
+                    onClick={() => removeImage(img)}
+                  >
+                    <Icon data-id={i} className="fas fa-trash-alt img-icon" />
+                  </Button>
+                </Modal>
               </div>
             );
           })

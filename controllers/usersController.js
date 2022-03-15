@@ -4,7 +4,6 @@ const config = require("../config/config");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
-  // Register
   register: async function (req, res) {
     try {
       const {
@@ -39,7 +38,6 @@ module.exports = {
         return res.status(400).json({ msg: "Please enter all fields" });
       }
 
-      // Grex for Emails
       var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
       if (reg.test(email) === false)
@@ -126,7 +124,6 @@ module.exports = {
     }
   },
 
-  // Authenticate/Login
   auth: async function (req, res) {
     try {
       const { email, password, role } = req.body;
@@ -194,7 +191,6 @@ module.exports = {
       throw err;
     }
   },
-
   getUser: async function (req, res) {
     try {
       const user = await User.findById(req.user.id)
@@ -250,7 +246,6 @@ module.exports = {
       throw err;
     }
   },
-
   userImageUpload: async function (req, res) {
     if (req.file === undefined)
       return res.status(404).json({ msg: "Please enter a file" });

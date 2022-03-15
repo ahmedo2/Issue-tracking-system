@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import "./style.css";
 import Moment from "react-moment";
 import {
   Container,
@@ -25,11 +24,12 @@ import {
   changeTixStatus,
   isNewComment,
 } from "../../actions/ticketAction";
+// import "./style.css";
 import { COMMENT_ERROR } from "../../actions/actions";
 import { clearErrors } from "../../actions/authAction";
 import Icon from "../../components/Icon";
 
-function UserTicketDetail(props) {
+function AdminTicketDetail(props) {
   const user = useSelector((state) => state.authReducer.user);
   const { currentTicket, isPostSuccess, isLoading } = useSelector(
     (state) => state.ticketReducer
@@ -69,6 +69,7 @@ function UserTicketDetail(props) {
       dispatch(clearErrors());
       dispatch(postSuccess());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, isPostSuccess, dispatch]);
 
   const handleStatusChange = (e) => {
@@ -87,7 +88,7 @@ function UserTicketDetail(props) {
     const commentObj = {
       date: Date.now(),
       text: commentPost,
-      from: `${firstName} ${lastName}`,
+      from: `${firstName} ${lastName} - Admin`,
     };
 
     dispatch(addComment(_id, commentObj));
@@ -186,9 +187,9 @@ function UserTicketDetail(props) {
                   <Row
                     key={i}
                     className={
-                      comment.from === `${firstName} ${lastName}`
-                        ? "comment-wrapper"
-                        : "admin-comment-wrapper"
+                      comment.from === `${firstName} ${lastName} - Admin`
+                        ? "admin-comment-wrapper"
+                        : "comment-wrapper"
                     }
                   >
                     <Col md={6} className="p-0">
@@ -197,7 +198,7 @@ function UserTicketDetail(props) {
                       </P>
                     </Col>
                     <Col md={6} className="p-0">
-                      <P className="comment-text text-right">
+                      <P className="comment-text date-comment">
                         <strong>Date posted:</strong>{" "}
                         <Moment format="MMMM Do, YYYY">{comment.date}</Moment>
                       </P>
@@ -274,4 +275,4 @@ function UserTicketDetail(props) {
   );
 }
 
-export default UserTicketDetail;
+export default AdminTicketDetail;

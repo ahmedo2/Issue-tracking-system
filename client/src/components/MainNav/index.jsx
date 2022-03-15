@@ -6,17 +6,17 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
-  NavbarText,
   Collapse,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import Icon from "../Icon";
 import Logout from "../Logout";
 import { Span } from "../Tags";
+// import "./style.css";
 
 function MainNav() {
   const { user } = useSelector((state) => state.authReducer);
+
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -31,7 +31,7 @@ function MainNav() {
         >
           <NavbarBrand className="text-primary nav-text" href="/">
             <Icon className="fas fa-clipboard-list text-primary fa-1x mr-3 ml-3"></Icon>
-            Ticket System
+            Ticket Generator
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
@@ -72,7 +72,7 @@ function MainNav() {
         >
           <NavbarBrand className="text-success nav-text" href="/">
             <Icon className="fas fa-clipboard-list text-success fa-1x mr-3 ml-3"></Icon>
-            Ticket System
+            Ticket Generator
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
@@ -88,22 +88,22 @@ function MainNav() {
                 </Link>
               </NavItem>
               <NavItem>
-                <Link className="nav-link" to="/admin/contact">
-                  Contact
+                <Link className="nav-link" to="/admin/messages">
+                  Messages
                 </Link>
               </NavItem>
             </Nav>
 
             <Span className="nav-text">
               <Link
-                className="nav-link nav-brand-text text-success"
+                className="nav-link nav-brand-text-admin"
                 to="/admin/dashboard"
               >
                 Admin Dashboard
               </Link>
             </Span>
             <Span className="nav-text">
-              <Logout className="nav-link nav-brand-text text-success" />
+              <Logout className="nav-link nav-brand-text-admin" />
             </Span>
           </Collapse>
         </Navbar>

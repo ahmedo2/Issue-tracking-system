@@ -19,7 +19,7 @@ function AdminMessagesList() {
   useEffect(() => {
     dispatch(loadAllMessages());
     dispatch(clearCurrentImages());
-  }, []);
+  }, [dispatch]);
 
   const showMessage = (id) => {
     history.push("/admin/messages/" + id);
@@ -72,12 +72,12 @@ function AdminMessagesList() {
                         <Icon title="Status" className="" />
                         {message.isMessageNew ? (
                           <Icon
-                            title="Read Message"
+                            title="New Message"
                             className="far fa-envelope fa-1x text-danger"
                           />
                         ) : (
                           <Icon
-                            title="New Message"
+                            title="Read Message"
                             className="far fa-envelope-open fa-1x text-success"
                           />
                         )}

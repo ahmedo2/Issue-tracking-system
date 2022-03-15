@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { postMessages, postMessageSuccess } from "../../actions/messageAction";
+import { clearCurrentImages } from "../../actions/ticketAction";
 import {
   Container,
   Row,
@@ -14,8 +15,8 @@ import {
 } from "reactstrap";
 import { MESSAGE_ERROR } from "../../actions/actions";
 import { clearErrors } from "../../actions/authAction";
-import { useHistory, Link } from "react-router-dom";
-import { H1, P } from "../../components/Tags";
+import { useHistory } from "react-router-dom";
+import { P } from "../../components/Tags";
 import MainNav from "../../components/MainNav";
 import Icon from "../../components/Icon";
 import "./style.css";
@@ -33,6 +34,8 @@ function UserContact() {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
+    dispatch(clearCurrentImages());
+
     if (error.id === MESSAGE_ERROR) {
       setMsg(error.msg.msg);
       dispatch(clearErrors());
@@ -41,13 +44,14 @@ function UserContact() {
     if (isPostMessageSuccess) {
       dispatch(postMessageSuccess());
     }
-  }, [error]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, dispatch]);
 
   const handleForm = (e) => {
+    e.preventDefault();
     setSuccessMessage(true);
     setMsg(null);
-    e.preventDefault();
-    // e.target.classList.add("spinner-grow spinner-grow-sm")
+
     const messageObj = {
       userId: user._id,
       subject: messageSubject,
@@ -56,7 +60,6 @@ function UserContact() {
     };
 
     dispatch(postMessages(messageObj));
-
     setMessageSubject("");
     setMessageDescription("");
   };
@@ -66,44 +69,37 @@ function UserContact() {
       <MainNav />
       <Container>
         <Row className="mt-4 mb-4">
-          {/* <Col md={12} className="mb-4 text-center"> */}
-          <Col className="text-dark nav-text" href="/">
-            <Icon className="fas fa-clipboard-list text-dark fa-2x mr-3 ml-3 contactTitle"></Icon>
-            <span className="contactTitle">Ticket System</span>
-          </Col>
-          {/* </Col> */}
-          <Col className="contactInfo" md={5}>
+          <Col className="contactInfo" lg={5}>
             <Row className="text-center pb-4">
-              <Col md={12} className="mt-4">
+              <Col lg={12} className="mt-4">
                 <span>
                   <Icon className="far fa-envelope fa-3x" />
                 </span>
-                <P className="contactText text-dark">contact@example.com</P>
+                <P className="contactText text-dark">contact@companyweb.com</P>
               </Col>
-              <Col md={12} className="mt-4">
+              <Col lg={12} className="mt-4">
                 <span>
                   <Icon className="fas fa-mobile-alt fa-3x"></Icon>
                 </span>
-                <P className="contactText">123 456 7890</P>
+                <P className="contactText">(407) 111-2233</P>
               </Col>
-              <Col md={12} className="mt-4">
+              <Col lg={12} className="mt-4">
                 <span>
                   <Icon className="fas fa-street-view fa-3x"></Icon>
                 </span>
-                <P className="contactText">Adress 01 2222 Adress</P>
+                <P className="contactText">PO Box 987654, Orlando - FL 32801</P>
               </Col>
             </Row>
           </Col>
-          <Col className="p-0 mt-4" md={6}>
+          <Col className="p-0 mt-4" lg={6}>
             <Row className="logForm">
-              <Col md={12}>
+              <Col lg={12}>
                 <Form className="mt-4 pl-4 pr-4 pb-0 pt-4 text-dark">
                   <h2 className="display-4 text-dark text-center">
                     Contact Form
                   </h2>
-                  {/* {msg ? <Alert color="danger">{msg}</Alert> : null} */}
                   <Row form>
-                    <Col md={12}>
+                    <Col lg={12}>
                       <FormGroup>
                         <Label for="contactSubject">Subject</Label>
                         <Input
@@ -116,7 +112,7 @@ function UserContact() {
                         />
                       </FormGroup>
                     </Col>
-                    <Col md={12}>
+                    <Col lg={12}>
                       <FormGroup>
                         <Label for="contactDescription">Description</Label>
                         <Input
@@ -132,7 +128,7 @@ function UserContact() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Col className="p-0" md={12}>
+                  <Col className="p-0" lg={12}>
                     {msg ? (
                       <>
                         <Alert color="danger">{msg}</Alert>
@@ -180,9 +176,8 @@ function UserContact() {
             </Row>
           </Col>
         </Row>
-
         <Row className="mb-4">
-          <Col md={12} className="text-center">
+          <Col lg={12} className="text-center">
             <Icon
               className="back-btn far fa-arrow-alt-circle-left fa-2x mt-3 ml-3 text-primary"
               onClick={history.goBack}

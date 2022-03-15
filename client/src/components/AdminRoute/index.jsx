@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Navigate } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function AdminRoute({ component: Component, ...rest }) {
@@ -12,7 +12,7 @@ function AdminRoute({ component: Component, ...rest }) {
         isAuthenticated && user.role === "admin" ? (
           <Component {...props} />
         ) : (
-          <Navigate
+          <Redirect
             to={{
               pathname: "/",
               state: { from: props.location },

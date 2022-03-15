@@ -1,21 +1,28 @@
 import React, { useEffect } from "react";
+import Moment from "react-moment";
 import { Container, Row, Col, Table } from "reactstrap";
 import { H1, P } from "../../components/Tags";
 import MainNav from "../../components/MainNav";
 import { useSelector, useDispatch } from "react-redux";
-import { loadUserTickets, currentTicket } from "../../actions/ticketAction";
-import { useNavigate, Link } from "react-router-dom";
+import {
+  loadUserTickets,
+  currentTicket,
+  clearCurrentImages,
+} from "../../actions/ticketAction";
+import { Link, useHistory } from "react-router-dom";
 import Icon from "../../components/Icon";
-import Moment from "react-moment";
+// import "./style.css";
 
 function UserTicketList() {
   const tickets = useSelector((state) => state.ticketReducer.userTickets);
   const dispatch = useDispatch();
 
-  const history = useNavigate();
+  const history = useHistory();
 
   useEffect(() => {
     dispatch(loadUserTickets());
+    dispatch(clearCurrentImages());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const statusIcon = (index) => {
@@ -31,7 +38,6 @@ function UserTicketList() {
       return ``;
     }
   };
-
   const showTicket = (id) => {
     dispatch(currentTicket(id));
     history.push("/user/ticketdetails");
@@ -50,7 +56,7 @@ function UserTicketList() {
               Tickets
             </H1>
           </Col>
-          <Col md={10}>
+          <Col sm={12} md={12} lg={12}>
             {tickets.length === 0 ? (
               <Col>
                 <P className="text-center" style={{ fontSize: "1.2em" }}>

@@ -22,7 +22,6 @@ module.exports = {
       throw err;
     }
   },
-
   save: async function (req, res) {
     try {
       const { tixId, date, subject, description, images, status, userId } =
@@ -55,7 +54,6 @@ module.exports = {
       throw err;
     }
   },
-
   updateStatus: async function (req, res) {
     try {
       const { status } = req.body;
@@ -69,7 +67,6 @@ module.exports = {
       throw err;
     }
   },
-
   addComment: async function (req, res) {
     try {
       const { text } = req.body;
@@ -86,7 +83,6 @@ module.exports = {
       throw err;
     }
   },
-
   newComment: async function (req, res) {
     try {
       const data = await UserTicket.findByIdAndUpdate(req.params.id, req.body, {
@@ -97,7 +93,6 @@ module.exports = {
       throw err;
     }
   },
-
   delete: async function (req, res) {
     try {
       await UserTicket.findByIdAndDelete(req.params.id);
@@ -106,7 +101,6 @@ module.exports = {
       throw err;
     }
   },
-
   findOneFile: function (req, res) {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       if (!file || file.length === 0) {
@@ -115,7 +109,6 @@ module.exports = {
       return res.json(file);
     });
   },
-
   findFiles: function (req, res) {
     gfs.files.find().toArray((err, files) => {
       if (!files || files.length === 0) {
@@ -124,7 +117,6 @@ module.exports = {
       return res.json(files);
     });
   },
-
   findOneImage: function (req, res) {
     gfs.files.findOne({ filename: req.params.imagename }, (err, file) => {
       if (!file || file.length === 0) {
@@ -142,7 +134,6 @@ module.exports = {
       }
     });
   },
-
   imageUploadNewTix: function (req, res) {
     if (req.file === undefined)
       return res.status(404).json({ msg: "Please enter a file" });
@@ -155,7 +146,6 @@ module.exports = {
       return res.status(404).json({ msg: "Not and image" });
     }
   },
-
   imageUpload: async function (req, res) {
     if (req.file === undefined)
       return res.status(404).json({ msg: "Please enter a file" });
@@ -177,7 +167,6 @@ module.exports = {
       return res.status(404).json({ msg: "Only PNG or JPG files please." });
     }
   },
-
   deleteProfileImage: function (req, res) {
     gfs.remove(
       { filename: req.params.imagename, root: "uploads" },
@@ -195,7 +184,6 @@ module.exports = {
       }
     );
   },
-
   imageDeleteNewTix: function (req, res) {
     gfs.remove(
       { filename: req.params.imagename, root: "uploads" },

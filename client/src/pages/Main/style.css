@@ -1,0 +1,48 @@
+body {
+  background-color: black;
+}
+/* body {
+  background-image: url("./images/gplaypattern.png");
+} */
+
+.logForm{
+  border-radius: 5px;
+  box-shadow: 5px 5px 10px rgb(141, 137, 137, .5);
+}
+.textLogin {
+  color: gray;
+  margin-top: 15px;
+}
+
+.textLoginTest {
+  font-size: .9em;
+  color: gray;
+  font-style: italic;
+}
+
+p.loginHeadText{
+  font-size: 2.3em;
+  font-weight: 400;
+}
+
+.linkSpan {
+  color: lightskyblue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.linkSpan:hover{
+  color:gray;
+}
+
+.jumbotron {
+  margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .textLoginTest {
+      font-size: .8em;
+      padding: 0 10px;
+  }
+}
+
